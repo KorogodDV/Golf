@@ -1,6 +1,7 @@
 #include <iostream>
 #include <SFML/Graphics.hpp>
 #include "Objects.h"
+#include "windows.h"
 
 const int window_length = 1280;
 const int window_width = 720;
@@ -11,7 +12,19 @@ int main()
 	sf::RenderWindow window(sf::VideoMode(window_length, window_width), "Golf");
 
 	Sphere ball1 = { {640, 360}, {0, 0}, {0, 0}, 50, 1, 255, 0 ,0 };
-	Sphere ball2 = { {100, 360}, {1, 0}, {0, 0}, 50, 1, 0, 255 ,0 };
+	Sphere ball2 = { {60, 360}, {1, 0}, {0, 0}, 50, 1, 0, 255 ,0 };
+
+	/*sf::Rect<float> rect1 = { sf::Vector2f(100, 100), sf::Vector2f(100, 100) };
+
+	std::cout << rect1.top;*/
+
+	sf::ConvexShape rect2;
+	rect2.setPointCount(4);
+	rect2.setPoint(0, { 200, 200 });
+	rect2.setPoint(1, { 300, 200 });
+	rect2.setPoint(2, { 300, 400 });
+	rect2.setPoint(3, { 200, 400 });
+	rect2.setFillColor(sf::Color(255, 0, 0));
 	
 	while (window.isOpen())
 	{
@@ -19,7 +32,11 @@ int main()
 
 		window.clear();
 
-		ball1.draw(&window)
+		window.draw(rect2);
+		ball1.draw(&window);
+		ball2.draw(&window);
+
+		window.display();
 
 		while (window.pollEvent(event))
 		{
@@ -29,6 +46,16 @@ int main()
 				break;
 			}
 		}
+
+		if (ball1.checkCollisionTwoSpheres(&ball2))
+			ball1.collideSpheres(&ball2, &window);
+
+		ball2.collide(&rect2);
+
+		ball1.move(DT);
+		ball2.move(DT);
+
+		Sleep(50);
 	}
 
 	return 0;

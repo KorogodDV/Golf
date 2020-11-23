@@ -42,12 +42,12 @@ struct Sphere
         this->blue = blue;
     }
 
-    void draw(sf::RenderWindow* window, int lighting_detailing = 10)
+    void draw(sf::RenderWindow* window, int lighting_detailing = 30)
     {
         float window_length = window->getSize().x;
         float window_width = window->getSize().y;
         assert((pos.x > r) && (pos.x + r < window_length) && (pos.y > r) && (pos.y + r < window_width));
-        sf::CircleShape circle(r, 10);
+        sf::CircleShape circle(r, 30);
         for (int i = 0; i < lighting_detailing; i++)
         {
             circle.setRadius(r - r * i / lighting_detailing);
@@ -63,6 +63,27 @@ struct Sphere
         pos = pos + speed * DT;
     }
 
+    void collide(sf::ConvexShape* wall)
+    {
+        sf::Rect<float> testRect = { pos - sf::Vector2f(r, r), sf::Vector2f(2 * r, 2 * r) };
+
+        if (!testRect.intersects(wall->getGlobalBounds()))
+        {
+            std::cout << "1   ";
+        }
+        else if (wall->getGlobalBounds().contains(pos))
+        {
+            std::cout << "2   ";
+        }
+        else if (r * r > pow((pos - wall->getPoint(0)).x, 2) + pow((pos - wall->getPoint(0)).y, 2) || r * r > pow((pos - wall->getPoint(1)).x, 2) + pow((pos - wall->getPoint(1)).y, 2) || r * r > pow((pos - wall->getPoint(2)).x, 2) + pow((pos - wall->getPoint(2)).y, 2) || r * r > pow((pos - wall->getPoint(3)).x, 2) + pow((pos - wall->getPoint(3)).y, 2))
+        {
+            std::cout << "3   ";
+        }
+        else if (wall->getPoint(1).x > pos.x > wall->getPoint(0).x || wall->getPoint(2).y < pos.y < wall->getPoint(1).y)
+        {
+            std::cout << "4   ";
+        }
+    }
 
     void checkColideWithWalls(float DT, sf::RenderWindow* window)
     {
