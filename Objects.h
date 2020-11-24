@@ -73,11 +73,11 @@ struct Sphere
         }
         else if (wall->getGlobalBounds().contains(pos))
         {
-            std::cout << "2   ";
+            std::cout << "2   "; // ѕересечение пр€мой, соедин€ющей центры, с стороной пр€моугольника
         }
         else if (r * r > pow((pos - wall->getPoint(0)).x, 2) + pow((pos - wall->getPoint(0)).y, 2) || r * r > pow((pos - wall->getPoint(1)).x, 2) + pow((pos - wall->getPoint(1)).y, 2) || r * r > pow((pos - wall->getPoint(2)).x, 2) + pow((pos - wall->getPoint(2)).y, 2) || r * r > pow((pos - wall->getPoint(3)).x, 2) + pow((pos - wall->getPoint(3)).y, 2))
         {
-            std::cout << "3   ";
+            std::cout << "3   "; // —равниваем врем€
         }
         else if (wall->getPoint(1).x > pos.x > wall->getPoint(0).x || wall->getPoint(2).y < pos.y < wall->getPoint(1).y)
         {

@@ -25,6 +25,8 @@ int main()
 	rect2.setPoint(2, { 300, 400 });
 	rect2.setPoint(3, { 200, 400 });
 	rect2.setFillColor(sf::Color(255, 0, 0));
+
+	sf::ConvexShape walls[10];
 	
 	while (window.isOpen())
 	{
@@ -45,17 +47,22 @@ int main()
 				window.close();
 				break;
 			}
+
+			//if ((event.type == sf::Event::KeyReleased) /*|| (event.key.code == sf::Keyboard::Enter)*/)
+			//{
+			//	std::cout << "Enter";
+			//}
 		}
 
 		if (ball1.checkCollisionTwoSpheres(&ball2))
 			ball1.collideSpheres(&ball2, &window);
 
-		ball2.collide(&rect2);
+		//ball2.collide(&rect2);
 
-		ball1.move(DT);
-		ball2.move(DT);
+		/*ball1.move(DT);
+		ball2.move(DT);*/
 
-		Sleep(50);
+		//Sleep(50);
 	}
 
 	return 0;
