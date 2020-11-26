@@ -29,6 +29,7 @@ struct Sphere
     void draw(sf::RenderWindow* window, int lighting_detailing = 30)
     {
         float window_length = window->getSize().x;
+        //std::cout << pos.x << "             " << pos.y;
         float window_width = window->getSize().y;
         assert((pos.x > r) && (pos.x + r < window_length) && (pos.y > r) && (pos.y + r < window_width));
         sf::CircleShape circle(r, 30);
@@ -56,6 +57,7 @@ struct Sphere
         {}
         else if (wall->getGlobalBounds().contains(newpos))
         {
+            std::cout << 2;
             if (abs(newpos.y - wall->getPoint(0).y) + abs(pos.y - wall->getPoint(0).y) == abs(newpos.y - pos.y) && wall->getPoint(0).x <= wall->getPoint(0).y * (newpos.x - pos.x) / (newpos.y - pos.y) + (newpos.y * pos.x - newpos.x * pos.y) / (newpos.y - pos.y) <= wall->getPoint(1).x)
             {
                 pos.y = 2 * wall->getPoint(0).y - pos.y - 2 * r;
@@ -79,6 +81,7 @@ struct Sphere
         }
         else if ((wall->getPoint(1).x >= newpos.x && newpos.x  >= wall->getPoint(0).x) || (wall->getPoint(1).y <= newpos.y && newpos.y <= wall->getPoint(2).y))
         {
+            std::cout << 4;
             if (wall->getPoint(0).x <= newpos.x && newpos.x <= wall->getPoint(1).x)
             {
                 if (newpos.y < wall->getPoint(0).y)
@@ -106,36 +109,28 @@ struct Sphere
                 }
             }
         }
-        else if (r * r > pow((newpos - wall->getPoint(0)).x, 2) + pow((newpos - wall->getPoint(0)).y, 2) || r * r > pow((newpos - wall->getPoint(1)).x, 2) + pow((newpos - wall->getPoint(1)).y, 2) || r * r > pow((newpos - wall->getPoint(2)).x, 2) + pow((newpos - wall->getPoint(2)).y, 2) || r * r > pow((newpos - wall->getPoint(3)).x, 2) + pow((newpos - wall->getPoint(3)).y, 2))
+        else if (pow(r, 2) > pow((newpos - wall->getPoint(0)).x, 2) + pow((newpos - wall->getPoint(0)).y, 2) || pow(r, 2) > pow((newpos - wall->getPoint(1)).x, 2) + pow((newpos - wall->getPoint(1)).y, 2) || pow(r, 2) > pow((newpos - wall->getPoint(2)).x, 2) + pow((newpos - wall->getPoint(2)).y, 2) || pow(r, 2) > pow((newpos - wall->getPoint(3)).x, 2) + pow((newpos - wall->getPoint(3)).y, 2))
         {
             std::cout << "3   "; // Сравниваем время
+            if (newpos.x < wall->getPoint(0).x)
+            {
+                if (newpos.y < wall->getPoint(0).y)
+                {
+                    float a = 1 + pow(speed.y / speed.x, 2);
+                    float b = -2 * (newpos.x + speed.y / speed.x * (newpos.y - wall->getPoint(0).y) + wall->getPoint(0).x * pow(speed.y / speed.x, 2));
+                    float c = pow(newpos.x, 2) + pow(wall->getPoint(0).y - newpos.y, 2) - 2 * (wall->getPoint(0).y - newpos.y) * speed.y / speed.x * wall->getPoint(0).x + pow(speed.y / speed.x * wall->getPoint(0).x, 2) - pow(r, 2);
+                    float x = (-b + speed.x / abs(speed.x) * sqrt(pow(b, 2) - 4 * a * c)) / (2 * a);
+                    float y = wall->getPoint(0).y + speed.y / speed.x * (x - wall->getPoint(0).x);
+                    std::cout << "   x         " << x/* << "  y       " << y*/;
+                    pos = wall->getPoint(0) - sf::Vector2f(x - wall->getPoint(0).x, y - wall->getPoint(0).y);
+                    sf::Vector2f e = sf::Vector2f(x - newpos.x, y - newpos.y);
+                    speed = e * (2 * (speed.x * e.x + speed.y * e.y) / ((x - newpos.x) * (x - newpos.x) + (y - newpos.y) * (y - newpos.y))) - speed;
+                    //std::cout << speed.x << "              " << speed.y;
+                    pos -= speed * DT;
+                }
+            }
         }
-    }
 
-    void checkColideWithWalls(float DT, sf::RenderWindow* window)
-    {
-        float window_length = window->getSize().x;
-        float window_width = window->getSize().y;
-        if (pos.x + speed.x * DT + r > window_length)
-        {
-            speed.x *= -1;
-            pos.x = 2 * window_length - pos.x - 2 * r;
-        }
-        if (pos.x + speed.x * DT - r < 0)
-        {
-            speed.x *= -1;
-            pos.x = -pos.x + 2 * r;
-        }
-        if (pos.y + speed.y * DT + r > window_width)
-        {
-            speed.y *= -1;
-            pos.y = 2 * window_width - pos.y - 2 * r;
-        }
-        if (pos.y + speed.y * DT - r < 0)
-        {
-            speed.y *= -1;
-            pos.y = -pos.y + 2 * r;
-        }
     }
 
     bool checkCollisionTwoSpheres(Sphere* sphere2)
