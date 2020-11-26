@@ -55,15 +55,15 @@ int main()
 	walls[8].setPoint(2, sf::Vector2f(760, 440));
 	walls[8].setPoint(3, sf::Vector2f(560, 440));
 
-	walls[9].setPoint(0, sf::Vector2f(700, 280));
+	walls[9].setPoint(0, sf::Vector2f(680, 280));
 	walls[9].setPoint(1, sf::Vector2f(880, 280));
 	walls[9].setPoint(2, sf::Vector2f(880, 320));
-	walls[9].setPoint(3, sf::Vector2f(700, 320));
+	walls[9].setPoint(3, sf::Vector2f(680, 320));
 
-	walls[10].setPoint(0, sf::Vector2f(700, 520));
-	walls[10].setPoint(1, sf::Vector2f(880, 560));
+	walls[10].setPoint(0, sf::Vector2f(680, 520));
+	walls[10].setPoint(1, sf::Vector2f(880, 520));
 	walls[10].setPoint(2, sf::Vector2f(880, 560));
-	walls[10].setPoint(3, sf::Vector2f(700, 520));
+	walls[10].setPoint(3, sf::Vector2f(680, 560));
 	
 	sf::RenderWindow window(sf::VideoMode(1280, 720), "Window");
 	
