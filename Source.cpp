@@ -12,7 +12,7 @@ int main()
 	sf::RenderWindow window(sf::VideoMode(window_length, window_width), "Golf");
 
 	Sphere ball1 = { {900, 360}, {0, 0}, {0, 0}, 50, 1, 255, 0 ,0 };
-	Sphere ball2 = { {250, 560}, {0, -2}, {0, 0}, 50, 1, 0, 255 ,0 };
+	Sphere ball2 = { {51, 200}, {0.1, 0.1}, {0, 0}, 50, 1, 0, 255 ,0 };
 
 	/*sf::Rect<float> rect1 = { sf::Vector2f(100, 100), sf::Vector2f(100, 100) };
 
@@ -62,7 +62,6 @@ int main()
 		ball1.move(DT);
 		ball2.move(DT);
 
-		Sleep(50);
 		/*std::cout << (2 * 5 / (10 - 10) + 100 / (10 - 10));*/
 	}
 

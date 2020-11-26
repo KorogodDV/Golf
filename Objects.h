@@ -77,9 +77,9 @@ struct Sphere
                 speed.x *= -1;
             }
         }
-        else if (wall->getPoint(1).x >= newpos.x >= wall->getPoint(0).x || wall->getPoint(1).y <= newpos.y <= wall->getPoint(2).y)
+        else if ((wall->getPoint(1).x >= newpos.x && newpos.x  >= wall->getPoint(0).x) || (wall->getPoint(1).y <= newpos.y && newpos.y <= wall->getPoint(2).y))
         {
-            if (wall->getPoint(0).x <= newpos.x <= wall->getPoint(1).x)
+            if (wall->getPoint(0).x <= newpos.x && newpos.x <= wall->getPoint(1).x)
             {
                 if (newpos.y < wall->getPoint(0).y)
                 {
