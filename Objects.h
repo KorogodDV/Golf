@@ -3,22 +3,6 @@
 #include <SFML/Graphics.hpp>
 #include <cassert>
 
-struct Wall
-{
-    sf::Vector2f A;
-    sf::Vector2f B;
-    sf::Vector2f C;
-    sf::Vector2f D;
-
-    Wall(sf::Vector2f a = { 0, 0 }, sf::Vector2f b = { 0, 0 }, sf::Vector2f c = { 0, 0 }, sf::Vector2f d = { 0, 0 })
-    {
-        A = a;
-        B = b;
-        C = c;
-        D = d;
-    }
-};
-
 struct Sphere
 {
     sf::Vector2f pos;
@@ -63,25 +47,68 @@ struct Sphere
         pos = pos + speed * DT;
     }
 
-    void collide(sf::ConvexShape* wall)
+    void collide(sf::ConvexShape* wall, const float DT)
     {
-        sf::Rect<float> testRect = { pos - sf::Vector2f(r, r), sf::Vector2f(2 * r, 2 * r) };
+        sf::Vector2f newpos = pos + speed * DT;
+        sf::Rect<float> testRect = { newpos - sf::Vector2f(r, r), sf::Vector2f(2 * r, 2 * r) };
 
         if (!testRect.intersects(wall->getGlobalBounds()))
+        {}
+        else if (wall->getGlobalBounds().contains(newpos))
         {
-            std::cout << "1   ";
+            if (abs(newpos.y - wall->getPoint(0).y) + abs(pos.y - wall->getPoint(0).y) == abs(newpos.y - pos.y) && wall->getPoint(0).x <= wall->getPoint(0).y * (newpos.x - pos.x) / (newpos.y - pos.y) + (newpos.y * pos.x - newpos.x * pos.y) / (newpos.y - pos.y) <= wall->getPoint(1).x)
+            {
+                pos.y = 2 * wall->getPoint(0).y - pos.y - 2 * r;
+                speed.y *= -1;
+            }
+            else if (abs(newpos.x - wall->getPoint(1).x) + abs(pos.x - wall->getPoint(1).x) == abs(newpos.x - pos.x) && wall->getPoint(2).y <= wall->getPoint(1).x / (newpos.x - pos.x) * (newpos.y - pos.y) - (newpos.y * pos.x - newpos.x * pos.y) / (newpos.x - pos.x) <= wall->getPoint(1).y)
+            {
+                pos.x = 2 * wall->getPoint(1).x - pos.x + 2 * r;
+                speed.x *= -1;
+            }
+            else if (abs(newpos.y - wall->getPoint(2).y) + abs(pos.y - wall->getPoint(2).y) == abs(newpos.y - pos.y) && wall->getPoint(3).x <= wall->getPoint(2).y * (newpos.x - pos.x) / (newpos.y - pos.y) + (newpos.y * pos.x - newpos.x * pos.y) / (newpos.y - pos.y) <= wall->getPoint(2).x)
+            {
+                pos.y = 2 * wall->getPoint(2).y - pos.y + 2 * r;
+                speed.y *= -1;
+            }
+            else
+            {
+                pos.x = 2 * wall->getPoint(3).x - pos.x - 2 * r;
+                speed.x *= -1;
+            }
         }
-        else if (wall->getGlobalBounds().contains(pos))
+        else if (wall->getPoint(1).x >= newpos.x >= wall->getPoint(0).x || wall->getPoint(1).y <= newpos.y <= wall->getPoint(2).y)
         {
-            std::cout << "2   "; // ѕересечение пр€мой, соедин€ющей центры, с стороной пр€моугольника
+            if (wall->getPoint(0).x <= newpos.x <= wall->getPoint(1).x)
+            {
+                if (newpos.y < wall->getPoint(0).y)
+                {
+                    pos.y = 2 * wall->getPoint(0).y - pos.y - 2 * r;
+                    speed.y *= -1;
+                }
+                else
+                {
+                    pos.y = 2 * wall->getPoint(2).y - pos.y + 2 * r;
+                    speed.y *= -1;
+                }
+            }
+            else
+            {
+                if (newpos.x < wall->getPoint(0).x)
+                {
+                    pos.x = 2 * wall->getPoint(3).x - pos.x - 2 * r;
+                    speed.x *= -1;
+                }
+                else
+                {
+                    pos.x = 2 * wall->getPoint(1).x - pos.x + 2 * r;
+                    speed.x *= -1;
+                }
+            }
         }
-        else if (r * r > pow((pos - wall->getPoint(0)).x, 2) + pow((pos - wall->getPoint(0)).y, 2) || r * r > pow((pos - wall->getPoint(1)).x, 2) + pow((pos - wall->getPoint(1)).y, 2) || r * r > pow((pos - wall->getPoint(2)).x, 2) + pow((pos - wall->getPoint(2)).y, 2) || r * r > pow((pos - wall->getPoint(3)).x, 2) + pow((pos - wall->getPoint(3)).y, 2))
+        else if (r * r > pow((newpos - wall->getPoint(0)).x, 2) + pow((newpos - wall->getPoint(0)).y, 2) || r * r > pow((newpos - wall->getPoint(1)).x, 2) + pow((newpos - wall->getPoint(1)).y, 2) || r * r > pow((newpos - wall->getPoint(2)).x, 2) + pow((newpos - wall->getPoint(2)).y, 2) || r * r > pow((newpos - wall->getPoint(3)).x, 2) + pow((newpos - wall->getPoint(3)).y, 2))
         {
             std::cout << "3   "; // —равниваем врем€
-        }
-        else if (wall->getPoint(1).x > pos.x > wall->getPoint(0).x || wall->getPoint(2).y < pos.y < wall->getPoint(1).y)
-        {
-            std::cout << "4   ";
         }
     }
 
