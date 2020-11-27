@@ -3,6 +3,21 @@
 #include <SFML/Graphics.hpp>
 #include <cassert>
 
+struct Floor
+{
+    sf::ConvexShape rect;
+    float mu;
+    sf::Vector2f direction;
+
+    Floor(sf::ConvexShape shape = sf::ConvexShape(4), float mu = 0, sf::Vector2f direction = sf::Vector2f(0, 0))
+    {
+        rect = shape;
+        this->mu = mu;
+        this->direction = direction;
+    }
+};
+
+
 struct Sphere
 {
     sf::Vector2f pos;
@@ -49,6 +64,34 @@ struct Sphere
     {
         speed = speed + acceleration * DT;
         pos = pos + speed * DT;
+    }
+
+    void friction(Floor* floor, int len)
+    {
+        for (int i = 0; i < len; i++)
+        {
+            if (floor[i].rect.getGlobalBounds().contains(pos))
+            {
+                if (floor[i].mu < 0)
+                {
+                    acceleration = speed / float(sqrt(pow(speed.x, 2) + pow(speed.y, 2))) / (-10.f);
+                    if (pow(speed.x, 2) + pow(speed.y, 2) < 0.1)
+                        acceleration = speed * (-1.f);
+                    break;
+                }
+                else
+                {
+                    acceleration = floor[i].direction;
+                    break;
+                }
+            }
+            else if (i == len - 1)
+            {
+                acceleration = speed / float(sqrt(pow(speed.x, 2) + pow(speed.y, 2))) / (-50.f);
+                if (pow(speed.x, 2) + pow(speed.y, 2) < 0.02)
+                    acceleration = speed * (-1.f);
+            }
+        }
     }
 
     void collide(sf::ConvexShape* wall, const float DT)

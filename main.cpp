@@ -75,8 +75,22 @@ int main()
 	walls[9].setPoint(2, sf::Vector2f(880, 560));
 	walls[9].setPoint(3, sf::Vector2f(680, 560));
 
-	Sphere ball1 = { {800, 100}, {2.0, 2.0}, {0, 0}, 20, 1, 255, 0 ,0 };
+	// Initializing players
+
+	Sphere ball1 = { {270, 100}, {0.0, 5.0}, {0, 0}, 20, 1, 255, 0 ,0 };
 	
+	// Initializing sand and boosters
+
+	const int N = 10;
+	Floor floor[N];
+
+	floor[0].mu = 1;
+	floor[0].direction = sf::Vector2f(0, -1);
+	floor[0].rect.setPoint(0, sf::Vector2f(260, 100));
+	floor[0].rect.setPoint(1, sf::Vector2f(400, 100));
+	floor[0].rect.setPoint(0, sf::Vector2f(400, 560));
+	floor[0].rect.setPoint(0, sf::Vector2f(260, 560));
+
 	while (window.isOpen())
 	{
 		sf::Event event;
@@ -110,6 +124,10 @@ int main()
 			ball1.collide(&walls[i], DT);
 		}
 		ball1.flag = false;
+
+		if (pow(ball1.speed.x, 2)+ pow(ball1.speed.y, 2) != 0)
+			ball1.friction(floor, N);
+
 		ball1.move(DT);
 
 	}
