@@ -76,22 +76,6 @@ int main()
 	walls[9].setPoint(3, sf::Vector2f(680, 560));
 
 	Sphere ball1 = { {800, 100}, {2.0, 2.0}, {0, 0}, 20, 1, 255, 0 ,0 };
-
-	/*sf::ConvexShape rect1;
-	rect1.setPointCount(4);
-	rect1.setPoint(0, { 200, 300 });
-	rect1.setPoint(1, { 500, 300 });
-	rect1.setPoint(2, { 500, 400 });
-	rect1.setPoint(3, { 200, 400 });
-	rect1.setFillColor(sf::Color(255, 0, 0));
-	
-	sf::ConvexShape rect2;
-	rect2.setPointCount(4);
-	rect2.setPoint(0, { 200, 200 });
-	rect2.setPoint(1, { 300, 200 });
-	rect2.setPoint(2, { 300, 400 });
-	rect2.setPoint(3, { 200, 400 });
-	rect2.setFillColor(sf::Color(255, 0, 0));*/
 	
 	while (window.isOpen())
 	{

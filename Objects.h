@@ -211,7 +211,6 @@ struct Sphere
                 }
             }
         }
-
     }
 
     bool checkCollisionTwoSpheres(Sphere* sphere2)
