@@ -13,8 +13,9 @@ struct Sphere
     int red;
     int green;
     int blue;
+    bool flag;
 
-    Sphere(sf::Vector2f pos = sf::Vector2f(0, 0), sf::Vector2f speed = sf::Vector2f(0, 0), sf::Vector2f acceleration = sf::Vector2f(0, 0), float r = 0, float m = 1, int red = 0, int green = 0, int blue = 0)
+    Sphere(sf::Vector2f pos = sf::Vector2f(0, 0), sf::Vector2f speed = sf::Vector2f(0, 0), sf::Vector2f acceleration = sf::Vector2f(0, 0), float r = 0, float m = 1, int red = 0, int green = 0, int blue = 0, bool flag = false)
     {
         this->pos = pos;
         this->speed = speed;
@@ -24,6 +25,8 @@ struct Sphere
         this->red = red;
         this->green = green;
         this->blue = blue;
+        this->flag = flag;
+        
     }
 
     void draw(sf::RenderWindow* window, int lighting_detailing = 30)
@@ -57,7 +60,6 @@ struct Sphere
         {}
         else if (wall->getGlobalBounds().contains(newpos))
         {
-            std::cout << 2;
             if (abs(newpos.y - wall->getPoint(0).y) + abs(pos.y - wall->getPoint(0).y) == abs(newpos.y - pos.y) && wall->getPoint(0).x <= wall->getPoint(0).y * (newpos.x - pos.x) / (newpos.y - pos.y) + (newpos.y * pos.x - newpos.x * pos.y) / (newpos.y - pos.y) <= wall->getPoint(1).x)
             {
                 pos.y = 2 * wall->getPoint(0).y - pos.y - 2 * r;
@@ -81,7 +83,6 @@ struct Sphere
         }
         else if ((wall->getPoint(1).x >= newpos.x && newpos.x  >= wall->getPoint(0).x) || (wall->getPoint(1).y <= newpos.y && newpos.y <= wall->getPoint(2).y))
         {
-            std::cout << 4;
             if (wall->getPoint(0).x <= newpos.x && newpos.x <= wall->getPoint(1).x)
             {
                 if (newpos.y < wall->getPoint(0).y)
@@ -109,24 +110,105 @@ struct Sphere
                 }
             }
         }
-        else if (pow(r, 2) > pow((newpos - wall->getPoint(0)).x, 2) + pow((newpos - wall->getPoint(0)).y, 2) || pow(r, 2) > pow((newpos - wall->getPoint(1)).x, 2) + pow((newpos - wall->getPoint(1)).y, 2) || pow(r, 2) > pow((newpos - wall->getPoint(2)).x, 2) + pow((newpos - wall->getPoint(2)).y, 2) || pow(r, 2) > pow((newpos - wall->getPoint(3)).x, 2) + pow((newpos - wall->getPoint(3)).y, 2))
+        else if ((!flag) && (pow(r, 2) > pow((newpos - wall->getPoint(0)).x, 2) + pow((newpos - wall->getPoint(0)).y, 2) || pow(r, 2) > pow((newpos - wall->getPoint(1)).x, 2) + pow((newpos - wall->getPoint(1)).y, 2) || pow(r, 2) > pow((newpos - wall->getPoint(2)).x, 2) + pow((newpos - wall->getPoint(2)).y, 2) || pow(r, 2) > pow((newpos - wall->getPoint(3)).x, 2) + pow((newpos - wall->getPoint(3)).y, 2)))
         {
             std::cout << "3   "; // Сравниваем время
             if (newpos.x < wall->getPoint(0).x)
             {
                 if (newpos.y < wall->getPoint(0).y)
                 {
-                    float a = 1 + pow(speed.y / speed.x, 2);
-                    float b = -2 * (newpos.x + speed.y / speed.x * (newpos.y - wall->getPoint(0).y) + wall->getPoint(0).x * pow(speed.y / speed.x, 2));
-                    float c = pow(newpos.x, 2) + pow(wall->getPoint(0).y - newpos.y, 2) - 2 * (wall->getPoint(0).y - newpos.y) * speed.y / speed.x * wall->getPoint(0).x + pow(speed.y / speed.x * wall->getPoint(0).x, 2) - pow(r, 2);
-                    float x = (-b + speed.x / abs(speed.x) * sqrt(pow(b, 2) - 4 * a * c)) / (2 * a);
-                    float y = wall->getPoint(0).y + speed.y / speed.x * (x - wall->getPoint(0).x);
-                    std::cout << "   x         " << x/* << "  y       " << y*/;
-                    pos = wall->getPoint(0) - sf::Vector2f(x - wall->getPoint(0).x, y - wall->getPoint(0).y);
+                    float x;
+                    float y;
+                    if (speed.x == 0)
+                    {
+                        x = wall->getPoint(0).x;
+                        y = newpos.y + r * speed.y / abs(speed.y);
+                    }
+                    else
+                    {
+                        float a = 1 + pow(speed.y / speed.x, 2);
+                        float b = -2 * (newpos.x + speed.y / speed.x * (newpos.y - wall->getPoint(0).y) + wall->getPoint(0).x * pow(speed.y / speed.x, 2));
+                        float c = pow(newpos.x, 2) + pow(wall->getPoint(0).y - newpos.y, 2) - 2 * (wall->getPoint(0).y - newpos.y) * speed.y / speed.x * wall->getPoint(0).x + pow(speed.y / speed.x * wall->getPoint(0).x, 2) - pow(r, 2);
+                        x = (-b + speed.x / abs(speed.x) * sqrt(pow(b, 2) - 4 * a * c)) / (2 * a);
+                        y = wall->getPoint(0).y + speed.y / speed.x * (x - wall->getPoint(0).x);
+                    }
+                    pos = newpos - sf::Vector2f(x - wall->getPoint(0).x, y - wall->getPoint(0).y);
                     sf::Vector2f e = sf::Vector2f(x - newpos.x, y - newpos.y);
-                    speed = e * (2 * (speed.x * e.x + speed.y * e.y) / ((x - newpos.x) * (x - newpos.x) + (y - newpos.y) * (y - newpos.y))) - speed;
-                    //std::cout << speed.x << "              " << speed.y;
+                    speed = e * (-2 * (speed.x * e.x + speed.y * e.y) / ((x - newpos.x) * (x - newpos.x) + (y - newpos.y) * (y - newpos.y))) + speed;
                     pos -= speed * DT;
+                    flag = true;
+                }
+                else
+                {
+                    float x;
+                    float y;
+                    if (speed.x == 0)
+                    {
+                        x = wall->getPoint(3).x;
+                        y = newpos.y + r * speed.y / abs(speed.y);
+                    }
+                    else
+                    {
+                        float a = 1 + pow(speed.y / speed.x, 2);
+                        float b = -2 * (newpos.x + speed.y / speed.x * (newpos.y - wall->getPoint(3).y) + wall->getPoint(3).x * pow(speed.y / speed.x, 2));
+                        float c = pow(newpos.x, 2) + pow(wall->getPoint(3).y - newpos.y, 2) - 2 * (wall->getPoint(3).y - newpos.y) * speed.y / speed.x * wall->getPoint(3).x + pow(speed.y / speed.x * wall->getPoint(3).x, 2) - pow(r, 2);
+                        x = (-b + speed.x / abs(speed.x) * sqrt(pow(b, 2) - 4 * a * c)) / (2 * a);
+                        y = wall->getPoint(3).y + speed.y / speed.x * (x - wall->getPoint(3).x);
+                    }
+                    pos = newpos - sf::Vector2f(x - wall->getPoint(3).x, y - wall->getPoint(3).y);
+                    sf::Vector2f e = sf::Vector2f(x - newpos.x, y - newpos.y);
+                    speed = e * (-2 * (speed.x * e.x + speed.y * e.y) / ((x - newpos.x) * (x - newpos.x) + (y - newpos.y) * (y - newpos.y))) + speed;
+                    pos -= speed * DT;
+                    flag = true;
+                }
+            }
+            else
+            {
+                if (newpos.y < wall->getPoint(1).y)
+                {
+                    float x;
+                    float y;
+                    if (speed.x == 0)
+                    {
+                        x = wall->getPoint(1).x;
+                        y = newpos.y + r * speed.y / abs(speed.y);
+                    }
+                    else
+                    {
+                        float a = 1 + pow(speed.y / speed.x, 2);
+                        float b = -2 * (newpos.x + speed.y / speed.x * (newpos.y - wall->getPoint(1).y) + wall->getPoint(1).x * pow(speed.y / speed.x, 2));
+                        float c = pow(newpos.x, 2) + pow(wall->getPoint(1).y - newpos.y, 2) - 2 * (wall->getPoint(1).y - newpos.y) * speed.y / speed.x * wall->getPoint(1).x + pow(speed.y / speed.x * wall->getPoint(1).x, 2) - pow(r, 2);
+                        x = (-b + speed.x / abs(speed.x) * sqrt(pow(b, 2) - 4 * a * c)) / (2 * a);
+                        y = wall->getPoint(1).y + speed.y / speed.x * (x - wall->getPoint(1).x);
+                    }
+                    pos = newpos - sf::Vector2f(x - wall->getPoint(1).x, y - wall->getPoint(1).y);
+                    sf::Vector2f e = sf::Vector2f(x - newpos.x, y - newpos.y);
+                    speed = e * (-2 * (speed.x * e.x + speed.y * e.y) / ((x - newpos.x) * (x - newpos.x) + (y - newpos.y) * (y - newpos.y))) + speed;
+                    pos -= speed * DT;
+                    flag = true;
+                }
+                else
+                {
+                    float x;
+                    float y;
+                    if (speed.x == 0)
+                    {
+                        x = wall->getPoint(2).x;
+                        y = newpos.y + r * speed.y / abs(speed.y);
+                    }
+                    else
+                    {
+                        float a = 1 + pow(speed.y / speed.x, 2);
+                        float b = -2 * (newpos.x + speed.y / speed.x * (newpos.y - wall->getPoint(2).y) + wall->getPoint(2).x * pow(speed.y / speed.x, 2));
+                        float c = pow(newpos.x, 2) + pow(wall->getPoint(2).y - newpos.y, 2) - 2 * (wall->getPoint(2).y - newpos.y) * speed.y / speed.x * wall->getPoint(2).x + pow(speed.y / speed.x * wall->getPoint(2).x, 2) - pow(r, 2);
+                        x = (-b + speed.x / abs(speed.x) * sqrt(pow(b, 2) - 4 * a * c)) / (2 * a);
+                        y = wall->getPoint(2).y + speed.y / speed.x * (x - wall->getPoint(2).x);
+                    }
+                    pos = newpos - sf::Vector2f(x - wall->getPoint(2).x, y - wall->getPoint(2).y);
+                    sf::Vector2f e = sf::Vector2f(x - newpos.x, y - newpos.y);
+                    speed = e * (-2 * (speed.x * e.x + speed.y * e.y) / ((x - newpos.x) * (x - newpos.x) + (y - newpos.y) * (y - newpos.y))) + speed;
+                    pos -= speed * DT;
+                    flag = true;
                 }
             }
         }

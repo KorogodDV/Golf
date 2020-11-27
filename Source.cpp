@@ -1,7 +1,6 @@
 #include <iostream>
 #include <SFML/Graphics.hpp>
 #include "Objects.h"
-#include "windows.h"
 
 const int window_length = 1280;
 const int window_width = 720;
@@ -12,7 +11,7 @@ int main()
 	sf::RenderWindow window(sf::VideoMode(window_length, window_width), "Golf");
 
 	Sphere ball1 = { {900, 360}, {0, 0}, {0, 0}, 50, 1, 255, 0 ,0 };
-	Sphere ball2 = { {100, 110}, {0.1, 0.1}, {0, 0}, 20, 1, 0, 255 ,0 };
+	Sphere ball2 = { {400, 500}, {-0.2, -0.2}, {0, 0}, 20, 1, 0, 255 ,0 };
 
 	sf::ConvexShape rect1;
 	rect1.setPointCount(4);
@@ -62,15 +61,12 @@ int main()
 		if (ball1.checkCollisionTwoSpheres(&ball2))
 			ball1.collideSpheres(&ball2, &window);
 
-		//ball2.collide(&rect1, DT);
+		ball2.collide(&rect1, DT);
 		ball2.collide(&rect2, DT);
 
 		ball1.move(DT);
 		ball2.move(DT);
 
-		//Sleep(50);
-
-		/*std::cout << (2 * 5 / (10 - 10) + 100 / (10 - 10));*/
 	}
 
 	return 0;
