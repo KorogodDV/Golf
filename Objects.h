@@ -112,7 +112,6 @@ struct Sphere
         }
         else if ((!flag) && (pow(r, 2) > pow((newpos - wall->getPoint(0)).x, 2) + pow((newpos - wall->getPoint(0)).y, 2) || pow(r, 2) > pow((newpos - wall->getPoint(1)).x, 2) + pow((newpos - wall->getPoint(1)).y, 2) || pow(r, 2) > pow((newpos - wall->getPoint(2)).x, 2) + pow((newpos - wall->getPoint(2)).y, 2) || pow(r, 2) > pow((newpos - wall->getPoint(3)).x, 2) + pow((newpos - wall->getPoint(3)).y, 2)))
         {
-            std::cout << "3   "; // Сравниваем время
             if (newpos.x < wall->getPoint(0).x)
             {
                 if (newpos.y < wall->getPoint(0).y)
