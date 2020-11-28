@@ -11,7 +11,7 @@ struct qwer
 	sf::Vector2f pos;
 	float radius;
 	int red;
-	int green; 
+	int green;
 	int blue;
 	bool play;
 
@@ -38,7 +38,7 @@ struct qwer
 
 	float force(float t)
 	{
-		return (1000 - abs(int(t * 10) % 2000 - 1000)) / 400.f;
+		return (1000 - abs(int(t * 10) % 2001 - 1000)) / 200.f;
 	}
 
 	void draw(sf::RenderWindow* window)
@@ -51,7 +51,7 @@ struct qwer
 		circle2.setRadius(radius / 4);
 		circle2.setFillColor(sf::Color(red / 2, green / 2, blue / 2));
 		circle2.setPosition(pos - (sf::Vector2f(1, 1) * radius / float(4)));
-		
+
 		window->draw(circle1);
 		window->draw(circle2);
 	}
@@ -61,15 +61,15 @@ struct qwer
 void drawQwer(sf::RenderWindow* window, qwer Qwer, sf::Vector2f posBall, sf::Vector2f posCursor, float t)
 {
 	sf::Vector2f dir = Qwer.direction(posCursor);
-	
+
 	sf::Vector2f ort(dir.y, dir.x);
 	if (dir.y != 0)
 	{
-		sf::Vector2f ort(1, - dir.x / dir.y);
+		sf::Vector2f ort(1, -dir.x / dir.y);
 		float length = sqrt(pow(ort.x, 2) + pow(ort.y, 2));
 		ort = ort / length;
 	}
-	
+
 	sf::Vector2f A = posBall + ort * float(3);
 	sf::Vector2f D = posBall - ort * float(3);
 	sf::Vector2f B = posBall + dir * float(100) + ort * float(3);
@@ -77,7 +77,7 @@ void drawQwer(sf::RenderWindow* window, qwer Qwer, sf::Vector2f posBall, sf::Vec
 	sf::Vector2f E = B + ort * float(3);
 	sf::Vector2f F = C - ort * float(3);
 	sf::Vector2f G = posBall + dir * float(120);
-	float force = Qwer.force(t) * 40;
+	float force = Qwer.force(t) * 20;
 	sf::Vector2f B1 = posBall + dir * float(force) + ort * float(3);
 	sf::Vector2f C1 = posBall + dir * float(force) - ort * float(3);
 
@@ -124,7 +124,7 @@ void drawQwer(sf::RenderWindow* window, qwer Qwer, sf::Vector2f posBall, sf::Vec
 void drawShots(sf::RenderWindow* window, sf::Vector2f A, sf::Vector2f B, sf::Vector2f C, sf::Vector2f D, int count)
 {
 	sf::Font font;
-	font.loadFromFile("arial.ttf");
+	font.loadFromFile("C:\\Users\\Дмитрий\\Documents\\19924.ttf");
 
 	sf::ConvexShape shape;
 	shape.setPointCount(4);
@@ -157,7 +157,7 @@ int main()
 	setlocale(LC_ALL, "Russian");
 	sf::RenderWindow window(sf::VideoMode(window_length, window_width), "Golf");
 	window.setFramerateLimit(60);
-	
+
 	//INTIALIZING WALLS
 
 	sf::ConvexShape walls[11];
@@ -225,7 +225,7 @@ int main()
 	sf::Vector2f curpos(0, 0);
 	float t = 0;
 	qwer Qwer(sf::Vector2f(100, 600), 75, 255, 0, 0, false);
-	
+
 	//INITIALIZING SAND AND BUSTERS
 
 	const int N = 58;
@@ -637,9 +637,10 @@ int main()
 	floor[57].rect.setPoint(3, sf::Vector2f(840, 680));
 
 	//INITIALIZING PLAYERS
-	
+
 	Sphere ball1 = { {800, 100}, {0, 0}, {0, 0}, 20, 1, 255, 0 ,0 };
-	
+	int count = 0;
+
 	while (window.isOpen())
 	{
 		sf::Event event;
@@ -661,14 +662,20 @@ int main()
 			if (event.type == sf::Event::MouseButtonReleased && Qwer.play)
 			{
 				Qwer.play = false;
+				std::cout << Qwer.force(t) << std::endl;
 				ball1.speed = Qwer.direction(curpos) * Qwer.force(t);
+				count++;
+				t = 0;
 			}
 		}
 
-
+		if (Qwer.play)
+		{ 
+			t += DT;
+		}
 		
 		window.clear(sf::Color(50, 205, 50));
-		
+
 		for (int i = 0; i < 11; i++)
 		{
 			window.draw(walls[i]);
@@ -682,14 +689,13 @@ int main()
 		if (Qwer.play)
 		{
 			drawQwer(&window, Qwer, ball1.pos, curpos, t);
-			t += DT;
 		}
 		else
 		{
 			Qwer.draw(&window);
 		};
 
-		drawShots(&window, sf::Vector2f(50, 400), sf::Vector2f(150, 400), sf::Vector2f(150, 500), sf::Vector2f(50, 500), 3);
+		drawShots(&window, sf::Vector2f(50, 400), sf::Vector2f(150, 400), sf::Vector2f(150, 500), sf::Vector2f(50, 500), count);
 		ball1.draw(&window);
 		window.display();
 
