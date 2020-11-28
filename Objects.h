@@ -137,7 +137,7 @@ struct Sphere
                 }
                 else
                 {
-                    acceleration = floor[i].direction;
+                    acceleration = floor[i].direction / 12.f;
                     break;
                 }
             }
@@ -145,7 +145,7 @@ struct Sphere
             {
                 acceleration = speed / float(sqrt(pow(speed.x, 2) + pow(speed.y, 2))) / (-50.f);
                 if (pow(speed.x, 2) + pow(speed.y, 2) > 25)
-                    acceleration = speed * float(-0.1);
+                    acceleration = speed * float(-0.15);
                 if (pow(speed.x, 2) + pow(speed.y, 2) < 0.02)
                     acceleration = speed * (-1.f);
             }

@@ -62,13 +62,9 @@ void drawQwer(sf::RenderWindow* window, qwer Qwer, sf::Vector2f posBall, sf::Vec
 {
 	sf::Vector2f dir = Qwer.direction(posCursor);
 
-	sf::Vector2f ort(dir.y, dir.x);
-	if (dir.y != 0)
-	{
-		sf::Vector2f ort(1, -dir.x / dir.y);
-		float length = sqrt(pow(ort.x, 2) + pow(ort.y, 2));
-		ort = ort / length;
-	}
+	sf::Vector2f ort(-dir.y, dir.x);
+	float length = sqrt(pow(ort.x, 2) + pow(ort.y, 2));
+	ort = ort / length;
 
 	sf::Vector2f A = posBall + ort * float(3);
 	sf::Vector2f D = posBall - ort * float(3);
@@ -124,7 +120,7 @@ void drawQwer(sf::RenderWindow* window, qwer Qwer, sf::Vector2f posBall, sf::Vec
 void drawShots(sf::RenderWindow* window, sf::Vector2f A, sf::Vector2f B, sf::Vector2f C, sf::Vector2f D, int count)
 {
 	sf::Font font;
-	font.loadFromFile("C:\\Users\\Дмитрий\\Documents\\19924.ttf");
+	font.loadFromFile("arial.ttf");
 
 	sf::ConvexShape shape;
 	shape.setPointCount(4);
@@ -638,7 +634,7 @@ int main()
 
 	//INITIALIZING PLAYERS
 
-	Sphere ball1 = { {800, 100}, {0, 0}, {0, 0}, 20, 1, 255, 0 ,0 };
+	Sphere ball1 = { {300, 100}, {0, 0}, {0, 0}, 20, 1, 255, 0 ,0 };
 	int count = 0;
 
 	while (window.isOpen())
@@ -662,7 +658,6 @@ int main()
 			if (event.type == sf::Event::MouseButtonReleased && Qwer.play)
 			{
 				Qwer.play = false;
-				std::cout << Qwer.force(t) << std::endl;
 				ball1.speed = Qwer.direction(curpos) * Qwer.force(t);
 				count++;
 				t = 0;
