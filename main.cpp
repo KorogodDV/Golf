@@ -1,7 +1,4 @@
 #include <SFML/Graphics.hpp>
-#include <SFML/Window.hpp>
-#include <iostream>
-#include <SFML/Graphics.hpp>
 #include "Objects.h"
 #include <cstdio>
 #include <iostream>
@@ -162,6 +159,8 @@ int main()
 
 	sf::RenderWindow window(sf::VideoMode(window_length, window_width), "Golf");
 	window.setFramerateLimit(60);
+	
+	//INTIALIZING WALLS
 
 	sf::ConvexShape walls[11];
 	for (int i = 0; i < 11; i++)
@@ -228,6 +227,8 @@ int main()
 	sf::Vector2f curpos(0, 0);
 	float t = 0;
 	qwer Qwer(sf::Vector2f(100, 600), 75, 255, 0, 0, false);
+	
+	//INITIALIZING SAND AND BUSTERS
 
 	const int N = 58;
 	Floor floor[N];
@@ -637,6 +638,8 @@ int main()
 	floor[57].rect.setPoint(2, sf::Vector2f(880, 680));
 	floor[57].rect.setPoint(3, sf::Vector2f(840, 680));
 
+	//INITIALIZING PLAYERS
+	
 	Sphere ball1 = { {800, 100}, {0, 0}, {0, 0}, 20, 1, 255, 0 ,0 };
 	
 	while (window.isOpen())
@@ -644,9 +647,10 @@ int main()
 		sf::Event event;
 		while (window.pollEvent(event))
 		{
-			if (event.type == sf::Event::Closed)
+			if ((event.type == sf::Event::Closed) || (event.key.code == sf::Keyboard::Escape))
 			{
 				window.close();
+				break;
 			}
 		}
 
