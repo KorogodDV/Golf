@@ -249,7 +249,7 @@ int main()
 	floor[57] = { 1, sf::Vector2f(1, 0), sf::Vector2f(840, 640), sf::Vector2f(880, 640), sf::Vector2f(880, 680), sf::Vector2f(840, 680) };
 	//INITIALIZING PLAYERS
 
-	Sphere ball1 = { {901, 100}, {0, 0}, {0, 0}, 20, 1, 255, 0 ,0 };
+	Sphere ball1 = { {300, 100}, {0, 0}, {0, 0}, 20, 1, 255, 0 ,0 };
 	int count = 0;
 
 	//INITIALIZING HOLE
@@ -265,7 +265,7 @@ int main()
 				window.close();
 				break;
 			}
-			if (event.type == sf::Event::MouseButtonPressed && (pow(curpos.x - Controller.pos.x, 2) + pow(curpos.y - Controller.pos.y, 2) < pow(Controller.radius, 2)))
+			if ((pow(ball1.speed.x, 2) + pow(ball1.speed.y, 2) == 0) && event.type == sf::Event::MouseButtonPressed && (pow(curpos.x - Controller.pos.x, 2) + pow(curpos.y - Controller.pos.y, 2) < pow(Controller.radius, 2)))
 			{
 				Controller.play = true;
 			}
