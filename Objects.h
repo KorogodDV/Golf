@@ -98,20 +98,22 @@ struct Sphere
         
     }
 
-    void draw(sf::RenderWindow* window, int lighting_detailing = 30)
+    void draw(sf::RenderWindow* window, int lighting_detailing = 2)
     {
         float window_length = window->getSize().x;
         //std::cout << pos.x << "             " << pos.y;
         float window_width = window->getSize().y;
         assert((pos.x > r) && (pos.x + r < window_length) && (pos.y > r) && (pos.y + r < window_width));
-        sf::CircleShape circle(r, 30);
-        for (int i = 0; i < lighting_detailing; i++)
-        {
-            circle.setRadius(r - r * i / lighting_detailing);
-            circle.setPosition(pos.x - r + 1.4 * r * i / lighting_detailing, pos.y - r + 0.6 * r * i / lighting_detailing);
-            circle.setFillColor(sf::Color(0.875 * red * i / lighting_detailing + 0.125 * red, 0.875 * green * i / lighting_detailing + 0.125 * green, 0.875 * blue * i / lighting_detailing + 0.125 * blue));
-            window->draw(circle);
-        }
+        sf::CircleShape circle1(r, 30);
+        sf::CircleShape circle2(r * 2 / 3, 30);
+        circle1.setPosition(pos.x - r, pos.y - r);
+        circle1.setFillColor(sf::Color(255, 0, 0));
+        circle1.setOutlineColor(sf::Color(0, 0, 0));
+        circle1.setOutlineThickness(2);
+        circle2.setPosition(pos.x - r * 2 / 3, pos.y - r * 2 / 3);
+        circle2.setFillColor(sf::Color(255, 128, 128)); 
+        window->draw(circle1);
+        window->draw(circle2);
     }
 
     void move(const float DT)
