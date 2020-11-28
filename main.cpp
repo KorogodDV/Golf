@@ -249,7 +249,7 @@ int main()
 	floor[57] = { 1, sf::Vector2f(1, 0), sf::Vector2f(840, 640), sf::Vector2f(880, 640), sf::Vector2f(880, 680), sf::Vector2f(840, 680) };
 	//INITIALIZING PLAYERS
 
-	Sphere ball1 = { {900, 100}, {0, 0}, {0, 0}, 20, 1, 255, 0 ,0 };
+	Sphere ball1 = { {901, 100}, {0, 0}, {0, 0}, 20, 1, 255, 0 ,0 };
 	int count = 0;
 
 	//INITIALIZING HOLE
@@ -260,7 +260,7 @@ int main()
 		sf::Event event;
 		while (window.pollEvent(event))
 		{
-			if ((event.type == sf::Event::Closed) || (event.key.code == sf::Keyboard::Escape))
+			if (event.type == sf::Event::Closed)
 			{
 				window.close();
 				break;
