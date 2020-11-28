@@ -38,7 +38,7 @@ struct qwer
 
 	float force(float t)
 	{
-		return (1000 - abs(int(t * 10) % 2000 - 1000)) / 400;
+		return (1000 - abs(int(t * 10) % 2000 - 1000)) / 400.f;
 	}
 
 	void draw(sf::RenderWindow* window)
@@ -116,7 +116,6 @@ void drawQwer(sf::RenderWindow* window, qwer Qwer, sf::Vector2f posBall, sf::Vec
 
 	window->draw(circle1);
 	window->draw(circle2);
-	
 	window->draw(arrow1);
 	window->draw(arrow2);
 	window->draw(arrow3);
@@ -125,8 +124,7 @@ void drawQwer(sf::RenderWindow* window, qwer Qwer, sf::Vector2f posBall, sf::Vec
 void drawShots(sf::RenderWindow* window, sf::Vector2f A, sf::Vector2f B, sf::Vector2f C, sf::Vector2f D, int count)
 {
 	sf::Font font;
-	int sizeFont = 10;
-	font.loadFromFile("C:\\Users\\Дмитрий\\Documents\\19924.ttf");
+	font.loadFromFile("arial.ttf");
 
 	sf::ConvexShape shape;
 	shape.setPointCount(4);
@@ -156,7 +154,7 @@ const float DT = 1.0;
 
 int main()
 {
-
+	setlocale(LC_ALL, "Russian");
 	sf::RenderWindow window(sf::VideoMode(window_length, window_width), "Golf");
 	window.setFramerateLimit(60);
 	
@@ -652,27 +650,24 @@ int main()
 				window.close();
 				break;
 			}
-		}
-
-		if (event.type == sf::Event::MouseButtonPressed)
-		{
-			if (Qwer.play == true)
+			if (event.type == sf::Event::MouseButtonPressed && (pow(curpos.x - Qwer.pos.x, 2) + pow(curpos.y - Qwer.pos.y, 2) < pow(Qwer.radius, 2)))
+			{
+				Qwer.play = true;
+			}
+			if (event.type == sf::Event::MouseMoved)
+			{
+				curpos = sf::Vector2f(event.mouseMove.x, event.mouseMove.y);
+			}
+			if (event.type == sf::Event::MouseButtonReleased && Qwer.play)
 			{
 				Qwer.play = false;
 				ball1.speed = Qwer.direction(curpos) * Qwer.force(t);
 			}
-			else
-			{
-				Qwer.play = true;
-			}
 		}
 
-		if (event.type == sf::Event::MouseMoved)
-		{
-			curpos = sf::Vector2f(event.mouseMove.x, event.mouseMove.y);
-		}
+
 		
-		window.clear(sf::Color(0, 255, 0));
+		window.clear(sf::Color(50, 205, 50));
 		
 		for (int i = 0; i < 11; i++)
 		{
