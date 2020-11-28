@@ -98,7 +98,7 @@ struct Sphere
         
     }
 
-    void draw(sf::RenderWindow* window, int lighting_detailing = 30)
+    void draw(sf::RenderWindow* window, int lighting_detailing = 2)
     {
         float window_length = window->getSize().x;
         float window_width = window->getSize().y;
@@ -109,7 +109,7 @@ struct Sphere
         circle1.setOutlineColor(sf::Color(0, 0, 0));
         circle1.setOutlineThickness(2);
         circle2.setPosition(pos.x - r * 2 / 3, pos.y - r * 2 / 3);
-        circle2.setFillColor(sf::Color(255, 128, 128));
+        circle2.setFillColor(sf::Color(255, 128, 128)); 
         window->draw(circle1);
         window->draw(circle2);
     }
