@@ -4,7 +4,13 @@
 #include <iostream>
 #include <cstdlib>
 
-
+void defWall(sf::ConvexShape* wall, sf::Vector2f A, sf::Vector2f B, sf::Vector2f C, sf::Vector2f D)
+{
+	wall->setPoint(0, A);
+	wall->setPoint(1, B);
+	wall->setPoint(2, C);
+	wall->setPoint(3, D);
+};
 
 struct qwer
 {
@@ -164,61 +170,17 @@ int main()
 		walls[i].setFillColor(sf::Color(128, 128, 128));
 	}
 
-	walls[1].setPoint(0, sf::Vector2f(0, 0));
-	walls[1].setPoint(1, sf::Vector2f(1280, 0));
-	walls[1].setPoint(2, sf::Vector2f(1280, 40));
-	walls[1].setPoint(3, sf::Vector2f(0, 40));
-
-	walls[3].setPoint(0, sf::Vector2f(0, 680));
-	walls[3].setPoint(1, sf::Vector2f(1280, 680));
-	walls[3].setPoint(2, sf::Vector2f(1280, 720));
-	walls[3].setPoint(3, sf::Vector2f(0, 720));
-
-	walls[0].setPoint(0, sf::Vector2f(0, 0));
-	walls[0].setPoint(1, sf::Vector2f(240, 0));
-	walls[0].setPoint(2, sf::Vector2f(240, 720));
-	walls[0].setPoint(3, sf::Vector2f(0, 720));
-
-	walls[10].setPoint(0, sf::Vector2f(1040, 0));
-	walls[10].setPoint(1, sf::Vector2f(1280, 0));
-	walls[10].setPoint(2, sf::Vector2f(1280, 720));
-	walls[10].setPoint(3, sf::Vector2f(1040, 720));
-
-	walls[2].setPoint(0, sf::Vector2f(400, 0));
-	walls[2].setPoint(1, sf::Vector2f(440, 0));
-	walls[2].setPoint(2, sf::Vector2f(440, 560));
-	walls[2].setPoint(3, sf::Vector2f(400, 560));
-
-	walls[4].setPoint(0, sf::Vector2f(560, 160));
-	walls[4].setPoint(1, sf::Vector2f(600, 160));
-	walls[4].setPoint(2, sf::Vector2f(600, 720));
-	walls[4].setPoint(3, sf::Vector2f(560, 720));
-
-	walls[6].setPoint(0, sf::Vector2f(840, 0));
-	walls[6].setPoint(1, sf::Vector2f(880, 0));
-	walls[6].setPoint(2, sf::Vector2f(880, 560));
-	walls[6].setPoint(3, sf::Vector2f(840, 560));
-
-	walls[5].setPoint(0, sf::Vector2f(560, 160));
-	walls[5].setPoint(1, sf::Vector2f(760, 160));
-	walls[5].setPoint(2, sf::Vector2f(760, 200));
-	walls[5].setPoint(3, sf::Vector2f(560, 200));
-
-	walls[8].setPoint(0, sf::Vector2f(560, 400));
-	walls[8].setPoint(1, sf::Vector2f(760, 400));
-	walls[8].setPoint(2, sf::Vector2f(760, 440));
-	walls[8].setPoint(3, sf::Vector2f(560, 440));
-
-	walls[7].setPoint(0, sf::Vector2f(680, 280));
-	walls[7].setPoint(1, sf::Vector2f(880, 280));
-	walls[7].setPoint(2, sf::Vector2f(880, 320));
-	walls[7].setPoint(3, sf::Vector2f(680, 320));
-
-	walls[9].setPoint(0, sf::Vector2f(680, 520));
-	walls[9].setPoint(1, sf::Vector2f(880, 520));
-	walls[9].setPoint(2, sf::Vector2f(880, 560));
-	walls[9].setPoint(3, sf::Vector2f(680, 560));
-
+	defWall(&walls[0], sf::Vector2f(0, 0), sf::Vector2f(240, 0), sf::Vector2f(240, 720), sf::Vector2f(0, 720));
+	defWall(&walls[1], sf::Vector2f(0, 0), sf::Vector2f(1280, 0), sf::Vector2f(1280, 40), sf::Vector2f(0, 40));
+	defWall(&walls[2], sf::Vector2f(400, 0), sf::Vector2f(440, 0), sf::Vector2f(440, 560), sf::Vector2f(400, 560));
+	defWall(&walls[3], sf::Vector2f(0, 680), sf::Vector2f(1280, 680), sf::Vector2f(1280, 720), sf::Vector2f(0, 720));
+	defWall(&walls[4], sf::Vector2f(560, 160), sf::Vector2f(600, 160), sf::Vector2f(600, 720), sf::Vector2f(560, 720));
+	defWall(&walls[5], sf::Vector2f(560, 160), sf::Vector2f(760, 160), sf::Vector2f(760, 200), sf::Vector2f(560, 200));
+	defWall(&walls[6], sf::Vector2f(840, 0), sf::Vector2f(880, 0), sf::Vector2f(880, 560), sf::Vector2f(840, 560));
+	defWall(&walls[7], sf::Vector2f(680, 280), sf::Vector2f(880, 280), sf::Vector2f(880, 320), sf::Vector2f(680, 320));
+	defWall(&walls[8], sf::Vector2f(560, 400), sf::Vector2f(760, 400), sf::Vector2f(760, 440), sf::Vector2f(560, 440));
+	defWall(&walls[9], sf::Vector2f(680, 520), sf::Vector2f(880, 520), sf::Vector2f(880, 560), sf::Vector2f(680, 560));
+	defWall(&walls[10], sf::Vector2f(1040, 0), sf::Vector2f(1280, 0), sf::Vector2f(1280, 720), sf::Vector2f(1040, 720));
 	sf::Vector2f curpos(0, 0);
 	float t = 0;
 	qwer Qwer(sf::Vector2f(100, 600), 75, 255, 0, 0, false);
@@ -228,411 +190,64 @@ int main()
 	const int N = 58;
 	Floor floor[N];
 
-	floor[0].mu = -1;
-	floor[0].rect.setPoint(0, sf::Vector2f(320, 480));
-	floor[0].rect.setPoint(1, sf::Vector2f(400, 480));
-	floor[0].rect.setPoint(2, sf::Vector2f(400, 560));
-	floor[0].rect.setPoint(3, sf::Vector2f(320, 560));
-
-	floor[1].mu = 1;
-	floor[1].direction = sf::Vector2f(0, -1);
-	floor[1].rect.setPoint(0, sf::Vector2f(440, 480));
-	floor[1].rect.setPoint(1, sf::Vector2f(480, 480));
-	floor[1].rect.setPoint(2, sf::Vector2f(480, 520));
-	floor[1].rect.setPoint(3, sf::Vector2f(440, 520));
-
-	floor[2].mu = 1;
-	floor[2].direction = sf::Vector2f(0, -1);
-	floor[2].rect.setPoint(0, sf::Vector2f(480, 480));
-	floor[2].rect.setPoint(1, sf::Vector2f(520, 480));
-	floor[2].rect.setPoint(2, sf::Vector2f(520, 520));
-	floor[2].rect.setPoint(3, sf::Vector2f(480, 520));
-
-	floor[3].mu = 1;
-	floor[3].direction = sf::Vector2f(0, -1);
-	floor[3].rect.setPoint(0, sf::Vector2f(520, 480));
-	floor[3].rect.setPoint(1, sf::Vector2f(560, 480));
-	floor[3].rect.setPoint(2, sf::Vector2f(560, 520));
-	floor[3].rect.setPoint(3, sf::Vector2f(520, 520));
-
-	floor[4].mu = 1;
-	floor[4].direction = sf::Vector2f(0, -1);
-	floor[4].rect.setPoint(0, sf::Vector2f(440, 520));
-	floor[4].rect.setPoint(1, sf::Vector2f(480, 520));
-	floor[4].rect.setPoint(2, sf::Vector2f(480, 560));
-	floor[4].rect.setPoint(3, sf::Vector2f(440, 560));
-
-	floor[5].mu = 1;
-	floor[5].direction = sf::Vector2f(0, -1);
-	floor[5].rect.setPoint(0, sf::Vector2f(480, 520));
-	floor[5].rect.setPoint(1, sf::Vector2f(520, 520));
-	floor[5].rect.setPoint(2, sf::Vector2f(520, 560));
-	floor[5].rect.setPoint(3, sf::Vector2f(480, 560));
-
-	floor[6].mu = 1;
-	floor[6].direction = sf::Vector2f(0, -1);
-	floor[6].rect.setPoint(0, sf::Vector2f(520, 520));
-	floor[6].rect.setPoint(1, sf::Vector2f(560, 520));
-	floor[6].rect.setPoint(2, sf::Vector2f(560, 560));
-	floor[6].rect.setPoint(3, sf::Vector2f(520, 560));
-
-	floor[7].mu = 1;
-	floor[7].direction = sf::Vector2f(0, 1);
-	floor[7].rect.setPoint(0, sf::Vector2f(600, 280));
-	floor[7].rect.setPoint(1, sf::Vector2f(640, 280));
-	floor[7].rect.setPoint(2, sf::Vector2f(640, 320));
-	floor[7].rect.setPoint(3, sf::Vector2f(600, 320));
-
-	floor[8].mu = 1;
-	floor[8].direction = sf::Vector2f(0, 1);
-	floor[8].rect.setPoint(0, sf::Vector2f(640, 280));
-	floor[8].rect.setPoint(1, sf::Vector2f(680, 280));
-	floor[8].rect.setPoint(2, sf::Vector2f(680, 320));
-	floor[8].rect.setPoint(3, sf::Vector2f(640, 320));
-
-	floor[9].mu = 1;
-	floor[9].direction = sf::Vector2f(1, 0);
-	floor[9].rect.setPoint(0, sf::Vector2f(600, 320));
-	floor[9].rect.setPoint(1, sf::Vector2f(640, 320));
-	floor[9].rect.setPoint(2, sf::Vector2f(640, 360));
-	floor[9].rect.setPoint(3, sf::Vector2f(600, 360));
-
-	floor[10].mu = 1;
-	floor[10].direction = sf::Vector2f(1, 0);
-	floor[10].rect.setPoint(0, sf::Vector2f(600, 360));
-	floor[10].rect.setPoint(1, sf::Vector2f(640, 360));
-	floor[10].rect.setPoint(2, sf::Vector2f(640, 400));
-	floor[10].rect.setPoint(3, sf::Vector2f(600, 400));
-
-	floor[11].mu = 1;
-	floor[11].direction = sf::Vector2f(1, 0);
-	floor[11].rect.setPoint(0, sf::Vector2f(640, 320));
-	floor[11].rect.setPoint(1, sf::Vector2f(680, 320));
-	floor[11].rect.setPoint(2, sf::Vector2f(680, 360));
-	floor[11].rect.setPoint(3, sf::Vector2f(640, 360));
-
-	floor[12].mu = 1;
-	floor[12].direction = sf::Vector2f(1, 0);
-	floor[12].rect.setPoint(0, sf::Vector2f(640, 360));
-	floor[12].rect.setPoint(1, sf::Vector2f(680, 360));
-	floor[12].rect.setPoint(2, sf::Vector2f(680, 400));
-	floor[12].rect.setPoint(3, sf::Vector2f(640, 400));
-
-	floor[13].mu = 1;
-	floor[13].direction = sf::Vector2f(1, 0);
-	floor[13].rect.setPoint(0, sf::Vector2f(680, 320));
-	floor[13].rect.setPoint(1, sf::Vector2f(720, 320));
-	floor[13].rect.setPoint(2, sf::Vector2f(720, 360));
-	floor[13].rect.setPoint(3, sf::Vector2f(680, 360));
-
-	floor[14].mu = 1;
-	floor[14].direction = sf::Vector2f(1, 0);
-	floor[14].rect.setPoint(0, sf::Vector2f(680, 360));
-	floor[14].rect.setPoint(1, sf::Vector2f(720, 360));
-	floor[14].rect.setPoint(2, sf::Vector2f(720, 400));
-	floor[14].rect.setPoint(3, sf::Vector2f(680, 400));
-
-	floor[15].mu = 1;
-	floor[15].direction = sf::Vector2f(1, 0);
-	floor[15].rect.setPoint(0, sf::Vector2f(720, 320));
-	floor[15].rect.setPoint(1, sf::Vector2f(760, 320));
-	floor[15].rect.setPoint(2, sf::Vector2f(760, 360));
-	floor[15].rect.setPoint(3, sf::Vector2f(720, 360));
-
-	floor[16].mu = 1;
-	floor[16].direction = sf::Vector2f(1, 0);
-	floor[16].rect.setPoint(0, sf::Vector2f(720, 360));
-	floor[16].rect.setPoint(1, sf::Vector2f(760, 360));
-	floor[16].rect.setPoint(2, sf::Vector2f(760, 400));
-	floor[16].rect.setPoint(3, sf::Vector2f(720, 400));
-
-	floor[17].mu = 1;
-	floor[17].direction = sf::Vector2f(0, 1);
-	floor[17].rect.setPoint(0, sf::Vector2f(760, 320));
-	floor[17].rect.setPoint(1, sf::Vector2f(800, 320));
-	floor[17].rect.setPoint(2, sf::Vector2f(800, 360));
-	floor[17].rect.setPoint(3, sf::Vector2f(760, 360));
-
-	floor[18].mu = 1;
-	floor[18].direction = sf::Vector2f(0, 1);
-	floor[18].rect.setPoint(0, sf::Vector2f(760, 360));
-	floor[18].rect.setPoint(1, sf::Vector2f(800, 360));
-	floor[18].rect.setPoint(2, sf::Vector2f(800, 400));
-	floor[18].rect.setPoint(3, sf::Vector2f(760, 400));
-
-	floor[19].mu = 1;
-	floor[19].direction = sf::Vector2f(0, 1);
-	floor[19].rect.setPoint(0, sf::Vector2f(800, 320));
-	floor[19].rect.setPoint(1, sf::Vector2f(840, 320));
-	floor[19].rect.setPoint(2, sf::Vector2f(840, 360));
-	floor[19].rect.setPoint(3, sf::Vector2f(800, 360));
-
-	floor[20].mu = 1;
-	floor[20].direction = sf::Vector2f(0, 1);
-	floor[20].rect.setPoint(0, sf::Vector2f(800, 360));
-	floor[20].rect.setPoint(1, sf::Vector2f(840, 360));
-	floor[20].rect.setPoint(2, sf::Vector2f(840, 400));
-	floor[20].rect.setPoint(3, sf::Vector2f(800, 400));
-
-	floor[21].mu = 1;
-	floor[21].direction = sf::Vector2f(0, 1);
-	floor[21].rect.setPoint(0, sf::Vector2f(760, 400));
-	floor[21].rect.setPoint(1, sf::Vector2f(800, 400));
-	floor[21].rect.setPoint(2, sf::Vector2f(800, 440));
-	floor[21].rect.setPoint(3, sf::Vector2f(760, 440));
-
-	floor[22].mu = 1;
-	floor[22].direction = sf::Vector2f(0, 1);
-	floor[22].rect.setPoint(0, sf::Vector2f(800, 400));
-	floor[22].rect.setPoint(1, sf::Vector2f(840, 400));
-	floor[22].rect.setPoint(2, sf::Vector2f(840, 440));
-	floor[22].rect.setPoint(3, sf::Vector2f(800, 440));
-
-	floor[23].mu = 1;
-	floor[23].direction = sf::Vector2f(-1, 0);
-	floor[23].rect.setPoint(0, sf::Vector2f(760, 440));
-	floor[23].rect.setPoint(1, sf::Vector2f(800, 440));
-	floor[23].rect.setPoint(2, sf::Vector2f(800, 480));
-	floor[23].rect.setPoint(3, sf::Vector2f(760, 480));
-
-	floor[24].mu = 1;
-	floor[24].direction = sf::Vector2f(-1, 0);
-	floor[24].rect.setPoint(0, sf::Vector2f(800, 440));
-	floor[24].rect.setPoint(1, sf::Vector2f(840, 440));
-	floor[24].rect.setPoint(2, sf::Vector2f(840, 480));
-	floor[24].rect.setPoint(3, sf::Vector2f(800, 480));
-
-	floor[25].mu = 1;
-	floor[25].direction = sf::Vector2f(-1, 0);
-	floor[25].rect.setPoint(0, sf::Vector2f(760, 480));
-	floor[25].rect.setPoint(1, sf::Vector2f(800, 480));
-	floor[25].rect.setPoint(2, sf::Vector2f(800, 520));
-	floor[25].rect.setPoint(3, sf::Vector2f(760, 520));
-
-	floor[26].mu = 1;
-	floor[26].direction = sf::Vector2f(-1, 0);
-	floor[26].rect.setPoint(0, sf::Vector2f(800, 480));
-	floor[26].rect.setPoint(1, sf::Vector2f(840, 480));
-	floor[26].rect.setPoint(2, sf::Vector2f(840, 520));
-	floor[26].rect.setPoint(3, sf::Vector2f(800, 520));
-
-	floor[27].mu = 1;
-	floor[27].direction = sf::Vector2f(-1, 0);
-	floor[27].rect.setPoint(0, sf::Vector2f(720, 440));
-	floor[27].rect.setPoint(1, sf::Vector2f(760, 440));
-	floor[27].rect.setPoint(2, sf::Vector2f(760, 480));
-	floor[27].rect.setPoint(3, sf::Vector2f(720, 480));
-
-	floor[28].mu = 1;
-	floor[28].direction = sf::Vector2f(-1, 0);
-	floor[28].rect.setPoint(0, sf::Vector2f(720, 480));
-	floor[28].rect.setPoint(1, sf::Vector2f(760, 480));
-	floor[28].rect.setPoint(2, sf::Vector2f(760, 520));
-	floor[28].rect.setPoint(3, sf::Vector2f(720, 520));
-
-	floor[29].mu = 1;
-	floor[29].direction = sf::Vector2f(-1, 0);
-	floor[29].rect.setPoint(0, sf::Vector2f(680, 440));
-	floor[29].rect.setPoint(1, sf::Vector2f(720, 440));
-	floor[29].rect.setPoint(2, sf::Vector2f(720, 480));
-	floor[29].rect.setPoint(3, sf::Vector2f(680, 480));
-
-	floor[30].mu = 1;
-	floor[30].direction = sf::Vector2f(-1, 0);
-	floor[30].rect.setPoint(0, sf::Vector2f(680, 480));
-	floor[30].rect.setPoint(1, sf::Vector2f(720, 480));
-	floor[30].rect.setPoint(2, sf::Vector2f(720, 520));
-	floor[30].rect.setPoint(3, sf::Vector2f(680, 520));
-
-	floor[31].mu = 1;
-	floor[31].direction = sf::Vector2f(0, 1);
-	floor[31].rect.setPoint(0, sf::Vector2f(640, 440));
-	floor[31].rect.setPoint(1, sf::Vector2f(680, 440));
-	floor[31].rect.setPoint(2, sf::Vector2f(680, 480));
-	floor[31].rect.setPoint(3, sf::Vector2f(640, 480));
-
-	floor[32].mu = 1;
-	floor[32].direction = sf::Vector2f(0, 1);
-	floor[32].rect.setPoint(0, sf::Vector2f(640, 480));
-	floor[32].rect.setPoint(1, sf::Vector2f(680, 480));
-	floor[32].rect.setPoint(2, sf::Vector2f(680, 520));
-	floor[32].rect.setPoint(3, sf::Vector2f(640, 520));
-
-	floor[33].mu = 1;
-	floor[33].direction = sf::Vector2f(0, 1);
-	floor[33].rect.setPoint(0, sf::Vector2f(600, 440));
-	floor[33].rect.setPoint(1, sf::Vector2f(640, 440));
-	floor[33].rect.setPoint(2, sf::Vector2f(640, 480));
-	floor[33].rect.setPoint(3, sf::Vector2f(600, 480));
-
-	floor[34].mu = 1;
-	floor[34].direction = sf::Vector2f(0, 1);
-	floor[34].rect.setPoint(0, sf::Vector2f(600, 480));
-	floor[34].rect.setPoint(1, sf::Vector2f(640, 480));
-	floor[34].rect.setPoint(2, sf::Vector2f(640, 520));
-	floor[34].rect.setPoint(3, sf::Vector2f(600, 520));
-
-	floor[35].mu = 1;
-	floor[35].direction = sf::Vector2f(0, 1);
-	floor[35].rect.setPoint(0, sf::Vector2f(600, 520));
-	floor[35].rect.setPoint(1, sf::Vector2f(640, 520));
-	floor[35].rect.setPoint(2, sf::Vector2f(640, 560));
-	floor[35].rect.setPoint(3, sf::Vector2f(600, 560));
-
-	floor[36].mu = 1;
-	floor[36].direction = sf::Vector2f(0, 1);
-	floor[36].rect.setPoint(0, sf::Vector2f(640, 520));
-	floor[36].rect.setPoint(1, sf::Vector2f(680, 520));
-	floor[36].rect.setPoint(2, sf::Vector2f(680, 560));
-	floor[36].rect.setPoint(3, sf::Vector2f(640, 560));
-
-	floor[37].mu = 1;
-	floor[37].direction = sf::Vector2f(1, 0);
-	floor[37].rect.setPoint(0, sf::Vector2f(600, 560));
-	floor[37].rect.setPoint(1, sf::Vector2f(640, 560));
-	floor[37].rect.setPoint(2, sf::Vector2f(640, 600));
-	floor[37].rect.setPoint(3, sf::Vector2f(600, 600));
-
-	floor[38].mu = 1;
-	floor[38].direction = sf::Vector2f(1, 0);
-	floor[38].rect.setPoint(0, sf::Vector2f(600, 600));
-	floor[38].rect.setPoint(1, sf::Vector2f(640, 600));
-	floor[38].rect.setPoint(2, sf::Vector2f(640, 640));
-	floor[38].rect.setPoint(3, sf::Vector2f(600, 640));
-
-	floor[39].mu = 1;
-	floor[39].direction = sf::Vector2f(1, 0);
-	floor[39].rect.setPoint(0, sf::Vector2f(640, 560));
-	floor[39].rect.setPoint(1, sf::Vector2f(680, 560));
-	floor[39].rect.setPoint(2, sf::Vector2f(680, 600));
-	floor[39].rect.setPoint(3, sf::Vector2f(640, 600));
-
-	floor[40].mu = 1;
-	floor[40].direction = sf::Vector2f(1, 0);
-	floor[40].rect.setPoint(0, sf::Vector2f(640, 600));
-	floor[40].rect.setPoint(1, sf::Vector2f(680, 600));
-	floor[40].rect.setPoint(2, sf::Vector2f(680, 640));
-	floor[40].rect.setPoint(3, sf::Vector2f(640, 640));
-
-	floor[41].mu = 1;
-	floor[41].direction = sf::Vector2f(1, 0);
-	floor[41].rect.setPoint(0, sf::Vector2f(680, 560));
-	floor[41].rect.setPoint(1, sf::Vector2f(720, 560));
-	floor[41].rect.setPoint(2, sf::Vector2f(720, 600));
-	floor[41].rect.setPoint(3, sf::Vector2f(680, 600));
-
-	floor[42].mu = 1;
-	floor[42].direction = sf::Vector2f(1, 0);
-	floor[42].rect.setPoint(0, sf::Vector2f(680, 600));
-	floor[42].rect.setPoint(1, sf::Vector2f(720, 600));
-	floor[42].rect.setPoint(2, sf::Vector2f(720, 640));
-	floor[42].rect.setPoint(3, sf::Vector2f(680, 640));
-
-	floor[43].mu = 1;
-	floor[43].direction = sf::Vector2f(1, 0);
-	floor[43].rect.setPoint(0, sf::Vector2f(720, 560));
-	floor[43].rect.setPoint(1, sf::Vector2f(760, 560));
-	floor[43].rect.setPoint(2, sf::Vector2f(760, 600));
-	floor[43].rect.setPoint(3, sf::Vector2f(720, 600));
-
-	floor[44].mu = 1;
-	floor[44].direction = sf::Vector2f(1, 0);
-	floor[44].rect.setPoint(0, sf::Vector2f(720, 600));
-	floor[44].rect.setPoint(1, sf::Vector2f(760, 600));
-	floor[44].rect.setPoint(2, sf::Vector2f(760, 640));
-	floor[44].rect.setPoint(3, sf::Vector2f(720, 640));
-
-	floor[45].mu = 1;
-	floor[45].direction = sf::Vector2f(1, 0);
-	floor[45].rect.setPoint(0, sf::Vector2f(760, 560));
-	floor[45].rect.setPoint(1, sf::Vector2f(800, 560));
-	floor[45].rect.setPoint(2, sf::Vector2f(800, 600));
-	floor[45].rect.setPoint(3, sf::Vector2f(760, 600));
-
-	floor[46].mu = 1;
-	floor[46].direction = sf::Vector2f(1, 0);
-	floor[46].rect.setPoint(0, sf::Vector2f(760, 600));
-	floor[46].rect.setPoint(1, sf::Vector2f(800, 600));
-	floor[46].rect.setPoint(2, sf::Vector2f(800, 640));
-	floor[46].rect.setPoint(3, sf::Vector2f(760, 640));
-
-	floor[47].mu = 1;
-	floor[47].direction = sf::Vector2f(1, 0);
-	floor[47].rect.setPoint(0, sf::Vector2f(800, 560));
-	floor[47].rect.setPoint(1, sf::Vector2f(840, 560));
-	floor[47].rect.setPoint(2, sf::Vector2f(840, 600));
-	floor[47].rect.setPoint(3, sf::Vector2f(800, 600));
-
-	floor[48].mu = 1;
-	floor[48].direction = sf::Vector2f(1, 0);
-	floor[48].rect.setPoint(0, sf::Vector2f(800, 600));
-	floor[48].rect.setPoint(1, sf::Vector2f(840, 600));
-	floor[48].rect.setPoint(2, sf::Vector2f(840, 640));
-	floor[48].rect.setPoint(3, sf::Vector2f(800, 640));
-
-	floor[49].mu = 1;
-	floor[49].direction = sf::Vector2f(1, 0);
-	floor[49].rect.setPoint(0, sf::Vector2f(840, 560));
-	floor[49].rect.setPoint(1, sf::Vector2f(880, 560));
-	floor[49].rect.setPoint(2, sf::Vector2f(880, 600));
-	floor[49].rect.setPoint(3, sf::Vector2f(840, 600));
-
-	floor[50].mu = 1;
-	floor[50].direction = sf::Vector2f(1, 0);
-	floor[50].rect.setPoint(0, sf::Vector2f(840, 600));
-	floor[50].rect.setPoint(1, sf::Vector2f(880, 600));
-	floor[50].rect.setPoint(2, sf::Vector2f(880, 640));
-	floor[50].rect.setPoint(3, sf::Vector2f(840, 640));
-
-	floor[51].mu = 1;
-	floor[51].direction = sf::Vector2f(1, 0);
-	floor[51].rect.setPoint(0, sf::Vector2f(600, 640));
-	floor[51].rect.setPoint(1, sf::Vector2f(640, 640));
-	floor[51].rect.setPoint(2, sf::Vector2f(640, 680));
-	floor[51].rect.setPoint(3, sf::Vector2f(600, 680));
-
-	floor[52].mu = 1;
-	floor[52].direction = sf::Vector2f(1, 0);
-	floor[52].rect.setPoint(0, sf::Vector2f(640, 640));
-	floor[52].rect.setPoint(1, sf::Vector2f(680, 640));
-	floor[52].rect.setPoint(2, sf::Vector2f(680, 680));
-	floor[52].rect.setPoint(3, sf::Vector2f(640, 680));
-
-	floor[53].mu = 1;
-	floor[53].direction = sf::Vector2f(1, 0);
-	floor[53].rect.setPoint(0, sf::Vector2f(680, 640));
-	floor[53].rect.setPoint(1, sf::Vector2f(720, 640));
-	floor[53].rect.setPoint(2, sf::Vector2f(720, 680));
-	floor[53].rect.setPoint(3, sf::Vector2f(680, 680));
-
-	floor[54].mu = 1;
-	floor[54].direction = sf::Vector2f(1, 0);
-	floor[54].rect.setPoint(0, sf::Vector2f(720, 640));
-	floor[54].rect.setPoint(1, sf::Vector2f(760, 640));
-	floor[54].rect.setPoint(2, sf::Vector2f(760, 680));
-	floor[54].rect.setPoint(3, sf::Vector2f(720, 680));
-
-	floor[55].mu = 1;
-	floor[55].direction = sf::Vector2f(1, 0);
-	floor[55].rect.setPoint(0, sf::Vector2f(760, 640));
-	floor[55].rect.setPoint(1, sf::Vector2f(800, 640));
-	floor[55].rect.setPoint(2, sf::Vector2f(800, 680));
-	floor[55].rect.setPoint(3, sf::Vector2f(760, 680));
-
-	floor[56].mu = 1;
-	floor[56].direction = sf::Vector2f(1, 0);
-	floor[56].rect.setPoint(0, sf::Vector2f(800, 640));
-	floor[56].rect.setPoint(1, sf::Vector2f(840, 640));
-	floor[56].rect.setPoint(2, sf::Vector2f(840, 680));
-	floor[56].rect.setPoint(3, sf::Vector2f(800, 680));
-
-	floor[57].mu = 1;
-	floor[57].direction = sf::Vector2f(1, 0);
-	floor[57].rect.setPoint(0, sf::Vector2f(840, 640));
-	floor[57].rect.setPoint(1, sf::Vector2f(880, 640));
-	floor[57].rect.setPoint(2, sf::Vector2f(880, 680));
-	floor[57].rect.setPoint(3, sf::Vector2f(840, 680));
-
+	floor[0].def(-1, sf::Vector2f(0, 0), sf::Vector2f(320, 480), sf::Vector2f(400, 480), sf::Vector2f(400, 560), sf::Vector2f(320, 560));
+	floor[1].def(1, sf::Vector2f(0, -1), sf::Vector2f(440, 480), sf::Vector2f(480, 480), sf::Vector2f(480, 520), sf::Vector2f(440, 520));
+	floor[2].def(1, sf::Vector2f(0, -1), sf::Vector2f(480, 480), sf::Vector2f(520, 480), sf::Vector2f(520, 520), sf::Vector2f(480, 520));
+	floor[3].def(1, sf::Vector2f(0, -1), sf::Vector2f(520, 480), sf::Vector2f(560, 480), sf::Vector2f(560, 520), sf::Vector2f(520, 520));
+	floor[4].def(1, sf::Vector2f(0, -1), sf::Vector2f(440, 520), sf::Vector2f(480, 520), sf::Vector2f(480, 560), sf::Vector2f(440, 560));
+	floor[5].def(1, sf::Vector2f(0, -1), sf::Vector2f(480, 520), sf::Vector2f(520, 520), sf::Vector2f(520, 560), sf::Vector2f(480, 560));
+	floor[6].def(1, sf::Vector2f(0, -1), sf::Vector2f(520, 520), sf::Vector2f(560, 520), sf::Vector2f(560, 560), sf::Vector2f(520, 560));
+	floor[7].def(1, sf::Vector2f(0, 1), sf::Vector2f(600, 280), sf::Vector2f(640, 280), sf::Vector2f(640, 320), sf::Vector2f(600, 320));
+	floor[8].def(1, sf::Vector2f(0, 1), sf::Vector2f(640, 280), sf::Vector2f(680, 280), sf::Vector2f(680, 320), sf::Vector2f(640, 320));
+	floor[9].def(1, sf::Vector2f(1, 0), sf::Vector2f(600, 320), sf::Vector2f(640, 320), sf::Vector2f(640, 360), sf::Vector2f(600, 360));
+	floor[10].def(1, sf::Vector2f(1, 0), sf::Vector2f(600, 360), sf::Vector2f(640, 360), sf::Vector2f(640, 400), sf::Vector2f(600, 400));
+	floor[11].def(1, sf::Vector2f(1, 0), sf::Vector2f(640, 320), sf::Vector2f(680, 320), sf::Vector2f(680, 360), sf::Vector2f(640, 360));
+	floor[12].def(1, sf::Vector2f(1, 0), sf::Vector2f(640, 360), sf::Vector2f(680, 360), sf::Vector2f(680, 400), sf::Vector2f(640, 400));
+	floor[13].def(1, sf::Vector2f(1, 0), sf::Vector2f(680, 320), sf::Vector2f(720, 320), sf::Vector2f(720, 360), sf::Vector2f(680, 360));
+	floor[14].def(1, sf::Vector2f(1, 0), sf::Vector2f(680, 360), sf::Vector2f(720, 360), sf::Vector2f(720, 400), sf::Vector2f(680, 400));
+	floor[15].def(1, sf::Vector2f(1, 0), sf::Vector2f(720, 320), sf::Vector2f(760, 320), sf::Vector2f(760, 360), sf::Vector2f(720, 360));
+	floor[16].def(1, sf::Vector2f(1, 0), sf::Vector2f(720, 360), sf::Vector2f(760, 360), sf::Vector2f(760, 400), sf::Vector2f(720, 400));
+	floor[17].def(1, sf::Vector2f(0, 1), sf::Vector2f(760, 320), sf::Vector2f(800, 320), sf::Vector2f(800, 360), sf::Vector2f(760, 360));
+	floor[18].def(1, sf::Vector2f(0, 1), sf::Vector2f(760, 360), sf::Vector2f(800, 360), sf::Vector2f(800, 400), sf::Vector2f(760, 400));
+	floor[19].def(1, sf::Vector2f(0, 1), sf::Vector2f(800, 320), sf::Vector2f(840, 320), sf::Vector2f(840, 360), sf::Vector2f(800, 360));
+	floor[20].def(1, sf::Vector2f(0, 1), sf::Vector2f(800, 360), sf::Vector2f(840, 360), sf::Vector2f(840, 400), sf::Vector2f(800, 400));
+	floor[21].def(1, sf::Vector2f(0, 1), sf::Vector2f(760, 400), sf::Vector2f(800, 400), sf::Vector2f(800, 440), sf::Vector2f(760, 440));
+	floor[22].def(1, sf::Vector2f(0, 1), sf::Vector2f(800, 400), sf::Vector2f(840, 400), sf::Vector2f(840, 440), sf::Vector2f(800, 440));
+	floor[23].def(1, sf::Vector2f(-1, 0), sf::Vector2f(760, 440), sf::Vector2f(800, 440), sf::Vector2f(800, 480), sf::Vector2f(760, 480));
+	floor[24].def(1, sf::Vector2f(-1, 0), sf::Vector2f(800, 440), sf::Vector2f(840, 440), sf::Vector2f(840, 480), sf::Vector2f(800, 480));
+	floor[25].def(1, sf::Vector2f(-1, 0), sf::Vector2f(760, 480), sf::Vector2f(800, 480), sf::Vector2f(800, 520), sf::Vector2f(760, 520));
+	floor[26].def(1, sf::Vector2f(-1, 0), sf::Vector2f(800, 480), sf::Vector2f(840, 480), sf::Vector2f(840, 520), sf::Vector2f(800, 520));
+	floor[27].def(1, sf::Vector2f(-1, 0), sf::Vector2f(720, 440), sf::Vector2f(760, 440), sf::Vector2f(760, 480), sf::Vector2f(720, 480));
+	floor[28].def(1, sf::Vector2f(-1, 0), sf::Vector2f(720, 480), sf::Vector2f(760, 480), sf::Vector2f(760, 520), sf::Vector2f(720, 520));
+	floor[29].def(1, sf::Vector2f(-1, 0), sf::Vector2f(680, 440), sf::Vector2f(720, 440), sf::Vector2f(720, 480), sf::Vector2f(680, 480));
+	floor[30].def(1, sf::Vector2f(-1, 0), sf::Vector2f(680, 480), sf::Vector2f(720, 480), sf::Vector2f(720, 520), sf::Vector2f(680, 520));
+	floor[31].def(1, sf::Vector2f(0, 1), sf::Vector2f(640, 440), sf::Vector2f(680, 440), sf::Vector2f(680, 480), sf::Vector2f(640, 480));
+	floor[32].def(1, sf::Vector2f(0, 1), sf::Vector2f(640, 480), sf::Vector2f(680, 480), sf::Vector2f(680, 520), sf::Vector2f(640, 520));
+	floor[33].def(1, sf::Vector2f(0, 1), sf::Vector2f(600, 440), sf::Vector2f(640, 440), sf::Vector2f(640, 480), sf::Vector2f(600, 480));
+	floor[34].def(1, sf::Vector2f(0, 1), sf::Vector2f(600, 480), sf::Vector2f(640, 480), sf::Vector2f(640, 520), sf::Vector2f(600, 520));
+	floor[35].def(1, sf::Vector2f(0, 1), sf::Vector2f(600, 520), sf::Vector2f(640, 520), sf::Vector2f(640, 560), sf::Vector2f(600, 560));
+	floor[36].def(1, sf::Vector2f(0, 1), sf::Vector2f(640, 520), sf::Vector2f(680, 520), sf::Vector2f(680, 560), sf::Vector2f(640, 560));
+	floor[37].def(1, sf::Vector2f(1, 0), sf::Vector2f(600, 560), sf::Vector2f(640, 560), sf::Vector2f(640, 600), sf::Vector2f(600, 600));
+	floor[38].def(1, sf::Vector2f(1, 0), sf::Vector2f(600, 600), sf::Vector2f(640, 600), sf::Vector2f(640, 640), sf::Vector2f(600, 640));
+	floor[39].def(1, sf::Vector2f(1, 0), sf::Vector2f(640, 560), sf::Vector2f(680, 560), sf::Vector2f(680, 600), sf::Vector2f(640, 600));
+	floor[40].def(1, sf::Vector2f(1, 0), sf::Vector2f(640, 600), sf::Vector2f(680, 600), sf::Vector2f(680, 640), sf::Vector2f(640, 640));
+	floor[41].def(1, sf::Vector2f(1, 0), sf::Vector2f(680, 560), sf::Vector2f(720, 560), sf::Vector2f(720, 600), sf::Vector2f(680, 600));
+	floor[42].def(1, sf::Vector2f(1, 0), sf::Vector2f(680, 600), sf::Vector2f(720, 600), sf::Vector2f(720, 640), sf::Vector2f(680, 640));
+	floor[43].def(1, sf::Vector2f(1, 0), sf::Vector2f(720, 560), sf::Vector2f(760, 560), sf::Vector2f(760, 600), sf::Vector2f(720, 600));
+	floor[44].def(1, sf::Vector2f(1, 0), sf::Vector2f(720, 600), sf::Vector2f(760, 600), sf::Vector2f(760, 640), sf::Vector2f(720, 640));
+	floor[45].def(1, sf::Vector2f(1, 0), sf::Vector2f(760, 560), sf::Vector2f(800, 560), sf::Vector2f(800, 600), sf::Vector2f(760, 600));
+	floor[46].def(1, sf::Vector2f(1, 0), sf::Vector2f(760, 600), sf::Vector2f(800, 600), sf::Vector2f(800, 640), sf::Vector2f(760, 640));
+	floor[47].def(1, sf::Vector2f(1, 0), sf::Vector2f(800, 560), sf::Vector2f(840, 560), sf::Vector2f(840, 600), sf::Vector2f(800, 600));
+	floor[48].def(1, sf::Vector2f(1, 0), sf::Vector2f(800, 600), sf::Vector2f(840, 600), sf::Vector2f(840, 640), sf::Vector2f(800, 640));
+	floor[49].def(1, sf::Vector2f(1, 0), sf::Vector2f(840, 560), sf::Vector2f(880, 560), sf::Vector2f(880, 600), sf::Vector2f(840, 600));
+	floor[50].def(1, sf::Vector2f(1, 0), sf::Vector2f(840, 600), sf::Vector2f(880, 600), sf::Vector2f(880, 640), sf::Vector2f(840, 640));
+	floor[51].def(1, sf::Vector2f(1, 0), sf::Vector2f(600, 640), sf::Vector2f(640, 640), sf::Vector2f(640, 680), sf::Vector2f(600, 680));
+	floor[52].def(1, sf::Vector2f(1, 0), sf::Vector2f(640, 640), sf::Vector2f(680, 640), sf::Vector2f(680, 680), sf::Vector2f(640, 680));
+	floor[53].def(1, sf::Vector2f(1, 0), sf::Vector2f(680, 640), sf::Vector2f(720, 640), sf::Vector2f(720, 680), sf::Vector2f(680, 680));
+	floor[54].def(1, sf::Vector2f(1, 0), sf::Vector2f(720, 640), sf::Vector2f(760, 640), sf::Vector2f(760, 680), sf::Vector2f(720, 680));
+	floor[55].def(1, sf::Vector2f(1, 0), sf::Vector2f(760, 640), sf::Vector2f(800, 640), sf::Vector2f(800, 680), sf::Vector2f(760, 680));
+	floor[56].def(1, sf::Vector2f(1, 0), sf::Vector2f(800, 640), sf::Vector2f(840, 640), sf::Vector2f(840, 680), sf::Vector2f(800, 680));
+	floor[57].def(1, sf::Vector2f(1, 0), sf::Vector2f(840, 640), sf::Vector2f(880, 640), sf::Vector2f(880, 680), sf::Vector2f(840, 680));
 	//INITIALIZING PLAYERS
 
 	Sphere ball1 = { {900, 100}, {0, 0}, {0, 0}, 20, 1, 255, 0 ,0 };
