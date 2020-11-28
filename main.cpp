@@ -12,7 +12,7 @@ void defWall(sf::ConvexShape* wall, sf::Vector2f A, sf::Vector2f B, sf::Vector2f
 	wall->setPoint(3, D);
 };
 
-struct qwer
+struct controller
 {
 	sf::Vector2f pos;
 	float radius;
@@ -21,7 +21,7 @@ struct qwer
 	int blue;
 	bool play;
 
-	qwer(sf::Vector2f pos, float radius, int red, int green, int blue, bool play)
+	controller(sf::Vector2f pos, float radius, int red, int green, int blue, bool play)
 	{
 		this->radius = radius;
 		this->pos = pos;
@@ -61,12 +61,11 @@ struct qwer
 		window->draw(circle1);
 		window->draw(circle2);
 	}
-
 };
 
-void drawQwer(sf::RenderWindow* window, qwer Qwer, sf::Vector2f posBall, sf::Vector2f posCursor, float t)
+void drawController(sf::RenderWindow* window, controller Controller, sf::Vector2f posBall, sf::Vector2f posCursor, float t)
 {
-	sf::Vector2f dir = Qwer.direction(posCursor);
+	sf::Vector2f dir = Controller.direction(posCursor);
 
 	sf::Vector2f ort(-dir.y, dir.x);
 	float length = sqrt(pow(ort.x, 2) + pow(ort.y, 2));
@@ -79,7 +78,7 @@ void drawQwer(sf::RenderWindow* window, qwer Qwer, sf::Vector2f posBall, sf::Vec
 	sf::Vector2f E = B + ort * float(3);
 	sf::Vector2f F = C - ort * float(3);
 	sf::Vector2f G = posBall + dir * float(120);
-	float force = Qwer.force(t) * 20;
+	float force = Controller.force(t) * 20;
 	sf::Vector2f B1 = posBall + dir * float(force) + ort * float(3);
 	sf::Vector2f C1 = posBall + dir * float(force) - ort * float(3);
 
@@ -108,13 +107,13 @@ void drawQwer(sf::RenderWindow* window, qwer Qwer, sf::Vector2f posBall, sf::Vec
 	arrow3.setFillColor(sf::Color(0, 0, 255));
 
 	sf::CircleShape circle1(0, 30);
-	circle1.setRadius(Qwer.radius);
-	circle1.setFillColor(sf::Color(Qwer.red, Qwer.green, Qwer.blue));
-	circle1.setPosition(Qwer.pos - (sf::Vector2f(1, 1) * Qwer.radius));
+	circle1.setRadius(Controller.radius);
+	circle1.setFillColor(sf::Color(Controller.red, Controller.green, Controller.blue));
+	circle1.setPosition(Controller.pos - (sf::Vector2f(1, 1) * Controller.radius));
 	sf::CircleShape circle2(0, 30);
-	circle2.setRadius(Qwer.radius / 4);
-	circle2.setFillColor(sf::Color(Qwer.red / 2, Qwer.green / 2, Qwer.blue / 2));
-	circle2.setPosition(Qwer.pos - (sf::Vector2f(1, 1) * Qwer.radius / float(4)));
+	circle2.setRadius(Controller.radius / 4);
+	circle2.setFillColor(sf::Color(Controller.red / 2, Controller.green / 2, Controller.blue / 2));
+	circle2.setPosition(Controller.pos - (sf::Vector2f(1, 1) * Controller.radius / float(4)));
 
 	window->draw(circle1);
 	window->draw(circle2);
@@ -156,7 +155,7 @@ int main()
 	// CREATING WINDOW
 	sf::RenderWindow window(sf::VideoMode(window_length, window_width), "Golf");
 	window.setFramerateLimit(60);
-	
+
 	// FONT UPLOADING
 	sf::Font font;
 	font.loadFromFile("arial.ttf");
@@ -183,7 +182,7 @@ int main()
 	defWall(&walls[10], sf::Vector2f(1040, 0), sf::Vector2f(1280, 0), sf::Vector2f(1280, 720), sf::Vector2f(1040, 720));
 	sf::Vector2f curpos(0, 0);
 	float t = 0;
-	qwer Qwer(sf::Vector2f(100, 600), 75, 255, 0, 0, false);
+	controller Controller(sf::Vector2f(100, 600), 75, 255, 0, 0, false);
 
 	//INITIALIZING SAND AND BUSTERS
 
@@ -266,28 +265,28 @@ int main()
 				window.close();
 				break;
 			}
-			if (event.type == sf::Event::MouseButtonPressed && (pow(curpos.x - Qwer.pos.x, 2) + pow(curpos.y - Qwer.pos.y, 2) < pow(Qwer.radius, 2)))
+			if (event.type == sf::Event::MouseButtonPressed && (pow(curpos.x - Controller.pos.x, 2) + pow(curpos.y - Controller.pos.y, 2) < pow(Controller.radius, 2)))
 			{
-				Qwer.play = true;
+				Controller.play = true;
 			}
 			if (event.type == sf::Event::MouseMoved)
 			{
 				curpos = sf::Vector2f(event.mouseMove.x, event.mouseMove.y);
 			}
-			if (event.type == sf::Event::MouseButtonReleased && Qwer.play)
+			if (event.type == sf::Event::MouseButtonReleased && Controller.play)
 			{
-				Qwer.play = false;
-				ball1.speed = Qwer.direction(curpos) * Qwer.force(t);
+				Controller.play = false;
+				ball1.speed = Controller.direction(curpos) * Controller.force(t);
 				count++;
 				t = 0;
 			}
 		}
 
-		if (Qwer.play)
-		{ 
+		if (Controller.play)
+		{
 			t += DT;
 		}
-		
+
 		window.clear(sf::Color(50, 205, 50));
 
 		for (int i = 0; i < 11; i++)
@@ -300,13 +299,13 @@ int main()
 			floor[i].draw(&window);
 		}
 
-		if (Qwer.play)
+		if (Controller.play)
 		{
-			drawQwer(&window, Qwer, ball1.pos, curpos, t);
+			drawController(&window, Controller, ball1.pos, curpos, t);
 		}
 		else
 		{
-			Qwer.draw(&window);
+			Controller.draw(&window);
 		};
 
 		drawShots(&window, sf::Vector2f(50, 400), sf::Vector2f(150, 400), sf::Vector2f(150, 500), sf::Vector2f(50, 500), count, &font);
@@ -325,7 +324,7 @@ int main()
 			window.draw(wincongrat);
 
 			window.display();
-			
+
 			while (true)
 			{
 				window.pollEvent(event);
