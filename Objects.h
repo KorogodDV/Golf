@@ -105,11 +105,11 @@ struct Sphere
         sf::CircleShape circle1(r, 30);
         sf::CircleShape circle2(r * 2 / 3, 30);
         circle1.setPosition(pos.x - r, pos.y - r);
-        circle1.setFillColor(sf::Color(255, 0, 0));
+        circle1.setFillColor(sf::Color(red, green, blue));
         circle1.setOutlineColor(sf::Color(0, 0, 0));
         circle1.setOutlineThickness(2);
         circle2.setPosition(pos.x - r * 2 / 3, pos.y - r * 2 / 3);
-        circle2.setFillColor(sf::Color(255, 128, 128)); 
+        circle2.setFillColor(sf::Color(red, green + 128, blue + 128)); 
         window->draw(circle1);
         window->draw(circle2);
     }
@@ -137,7 +137,7 @@ struct Sphere
                 }
                 else
                 {
-                    acceleration = floor[i].direction / 12.f;
+                    acceleration = floor[i].direction / 10.f;
                     break;
                 }
             }

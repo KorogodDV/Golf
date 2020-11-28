@@ -97,8 +97,8 @@ void drawQwer(sf::RenderWindow* window, qwer Qwer, sf::Vector2f posBall, sf::Vec
 	arrow3.setPoint(2, C1);
 	arrow3.setPoint(3, D);
 
-	arrow1.setFillColor(sf::Color(255, 255, 0));
-	arrow2.setFillColor(sf::Color(255, 255, 0));
+	arrow1.setFillColor(sf::Color(14, 241, 255));
+	arrow2.setFillColor(sf::Color(14, 241, 255));
 	arrow3.setFillColor(sf::Color(0, 0, 255));
 
 	sf::CircleShape circle1(0, 30);
@@ -117,11 +117,8 @@ void drawQwer(sf::RenderWindow* window, qwer Qwer, sf::Vector2f posBall, sf::Vec
 	window->draw(arrow3);
 };
 
-void drawShots(sf::RenderWindow* window, sf::Vector2f A, sf::Vector2f B, sf::Vector2f C, sf::Vector2f D, int count)
+void drawShots(sf::RenderWindow* window, sf::Vector2f A, sf::Vector2f B, sf::Vector2f C, sf::Vector2f D, int count, sf::Font* font)
 {
-	sf::Font font;
-	font.loadFromFile("arial.ttf");
-
 	sf::ConvexShape shape;
 	shape.setPointCount(4);
 	shape.setPoint(0, A);
@@ -130,12 +127,12 @@ void drawShots(sf::RenderWindow* window, sf::Vector2f A, sf::Vector2f B, sf::Vec
 	shape.setPoint(3, D);
 	shape.setFillColor(sf::Color(0, 0, 0));
 
-	sf::Text text("S H O T S", font, 15);
+	sf::Text text("S H O T S", *font, 15);
 	text.setFillColor(sf::Color(255, 255, 255));
 	text.setPosition(A + (D - A) / float(4) + (B - A) / float(10));
 
 	std::string str = std::to_string(count);
-	sf::Text text1(str, font, 30);
+	sf::Text text1(str, *font, 30);
 	text1.setFillColor(sf::Color(255, 0, 0));
 	text1.setPosition(A + (D - A) * float(3) / float(5) + (B - A) * float(2) / float(5));
 
@@ -150,9 +147,13 @@ const float DT = 1.0;
 
 int main()
 {
-	setlocale(LC_ALL, "Russian");
+	// CREATING WINDOW
 	sf::RenderWindow window(sf::VideoMode(window_length, window_width), "Golf");
 	window.setFramerateLimit(60);
+	
+	// FONT UPLOADING
+	sf::Font font;
+	font.loadFromFile("arial.ttf");
 
 	//INTIALIZING WALLS
 
@@ -634,8 +635,11 @@ int main()
 
 	//INITIALIZING PLAYERS
 
-	Sphere ball1 = { {300, 100}, {0, 0}, {0, 0}, 20, 1, 255, 0 ,0 };
+	Sphere ball1 = { {900, 100}, {0, 0}, {0, 0}, 20, 1, 255, 0 ,0 };
 	int count = 0;
+
+	//INITIALIZING HOLE
+	Sphere Hole = { {1000, 100}, {0, 0}, {0, 0}, 20, 1, 0, 0, 0 };
 
 	while (window.isOpen())
 	{
@@ -690,9 +694,31 @@ int main()
 			Qwer.draw(&window);
 		};
 
-		drawShots(&window, sf::Vector2f(50, 400), sf::Vector2f(150, 400), sf::Vector2f(150, 500), sf::Vector2f(50, 500), count);
+		drawShots(&window, sf::Vector2f(50, 400), sf::Vector2f(150, 400), sf::Vector2f(150, 500), sf::Vector2f(50, 500), count, &font);
 		ball1.draw(&window);
+		Hole.draw(&window);
 		window.display();
+
+		if (ball1.checkCollisionTwoSpheres(&Hole))
+		{
+			window.clear(sf::Color(255, 0, 0));
+
+			sf::Text wincongrat("S H O T S", font, 50);
+			wincongrat.setFillColor(sf::Color(255, 255, 255));
+			wincongrat.setPosition(640, 360);
+
+			window.draw(wincongrat);
+			
+			while (true)
+			{
+				window.pollEvent(event);
+				if ((event.type == sf::Event::Closed) || (event.type == sf::Event::KeyPressed) || (event.type == sf::Event::MouseButtonPressed))
+				{
+					window.close();
+					break;
+				}
+			}
+		}
 
 		for (int i = 0; i < 11; i++)
 		{
