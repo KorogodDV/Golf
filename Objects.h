@@ -117,8 +117,8 @@ struct Sphere
     void move(const float DT)
     {
         speed = speed + acceleration * DT;
-        if (pow(speed.x, 2) + pow(speed.y, 2) > 225)
-            speed = speed / float(pow(speed.x, 2) + pow(speed.y, 2)) * 15.f;
+        /*if (pow(speed.x, 2) + pow(speed.y, 2) > 225)
+            speed = speed / float(pow(speed.x, 2) + pow(speed.y, 2)) * 15.f;*/
         pos = pos + speed * DT;
     }
 
@@ -144,6 +144,8 @@ struct Sphere
             else if (i == len - 1)
             {
                 acceleration = speed / float(sqrt(pow(speed.x, 2) + pow(speed.y, 2))) / (-50.f);
+                if (pow(speed.x, 2) + pow(speed.y, 2) > 25)
+                    acceleration = speed * float(-0.1);
                 if (pow(speed.x, 2) + pow(speed.y, 2) < 0.02)
                     acceleration = speed * (-1.f);
             }
