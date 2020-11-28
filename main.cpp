@@ -251,7 +251,7 @@ int main()
 
 	//INITIALIZING PLAYERS
 
-	Sphere ball1 = { {300, 100}, {0, 0}, {0, 0}, 20, 1, 255, 0 ,0 };
+	Sphere ball1 = { {901, 100}, {0, 0}, {0, 0}, 20, 1, 255, 0 ,0 };
 	int count = 0;
 
 	//INITIALIZING HOLE
@@ -323,7 +323,11 @@ int main()
 			sf::Text wincongrat(std::string("RED PLAYER WON IN ") + std::to_string(count) + std::string(" MOVES"), font, 50);
 			wincongrat.setFillColor(sf::Color(255, 255, 255));
 			wincongrat.setPosition(250, 335);
+			window.draw(wincongrat);
 
+			wincongrat.setString(std::string("(press any button to close this window)"));
+			wincongrat.setCharacterSize(25);
+			wincongrat.setPosition(400, 385);
 			window.draw(wincongrat);
 
 			window.display();
