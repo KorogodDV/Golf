@@ -320,7 +320,7 @@ int main()
 		{
 			window.clear(sf::Color(255, 0, 0));
 
-			sf::Text wincongrat(std::string("RED PLAYER WON IN ") + std::to_string(count) + std::string(" MOVES"), font, 50);
+			sf::Text wincongrat(std::string("RED PLAYER HAS WON IN ") + std::to_string(count) + std::string(" MOVES"), font, 50);
 			wincongrat.setFillColor(sf::Color(255, 255, 255));
 			wincongrat.setPosition(250, 335);
 			window.draw(wincongrat);
