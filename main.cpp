@@ -114,10 +114,13 @@ int main()
 	//INITIALIZING PLAYERS
 
 	Sphere ball1 = { {300, 100}, {0, 0}, {0, 0}, 20, 1, 255, 0 ,0 };
-	Player player1(ball1, 0, sf::Vector2f(100, 600), 75, 255, 0, 0, sf::Vector2f(100, 450), 100, false);
+	Sphere ball2 = { {350, 100}, {0, 0}, {0, 0}, 20, 1, 0, 0 , 255 };
+
+	Player players[2] = { {ball1, 0, sf::Vector2f(100, 600), 75, 255, 0, 0, sf::Vector2f(100, 450), 100, false}, {ball2, 0, sf::Vector2f(1180, 600), 75, 0, 0, 255, sf::Vector2f(1180, 450), 100, false} };
 	
 	sf::Vector2f curpos(0, 0);
 	float t = 0;
+	int move = 0;
 
 	//INITIALIZING HOLE
 	Sphere Hole = { {1000, 100}, {0, 0}, {0, 0}, 20, 1, 0, 0, 0 };
@@ -132,24 +135,25 @@ int main()
 				window.close();
 				break;
 			}
-			if ((pow(player1.ball.speed.x, 2) + pow(player1.ball.speed.y, 2) == 0) && event.type == sf::Event::MouseButtonPressed && (pow(curpos.x - player1.pos.x, 2) + pow(curpos.y - player1.pos.y, 2) < pow(player1.radius, 2)))
+			if ((pow(players[(move + 1) % 2].ball.speed.x, 2) + pow(players[(move + 1) % 2].ball.speed.y, 2) == 0) && event.type == sf::Event::MouseButtonPressed && (pow(curpos.x - players[move].pos.x, 2) + pow(curpos.y - players[move].pos.y, 2) < pow(players[move].radius, 2)))
 			{
-				player1.play = true;
+				players[move].play = true;
 			}
 			if (event.type == sf::Event::MouseMoved)
 			{
 				curpos = sf::Vector2f(event.mouseMove.x, event.mouseMove.y);
 			}
-			if (event.type == sf::Event::MouseButtonReleased && player1.play)
+			if (event.type == sf::Event::MouseButtonReleased && players[move].play)
 			{
-				player1.play = false;
-				player1.ball.speed = player1.direction(curpos) * player1.force(t);
-				player1.count++;
+				players[move].play = false;
+				players[move].ball.speed = players[move].direction(curpos) * players[move].force(t);
+				players[move].count++;
 				t = 0;
+				move = (move + 1) % 2;
 			}
 		}
 
-		if (player1.play)
+		if (players[move].play)
 		{
 			t += DT;
 		}
@@ -166,19 +170,24 @@ int main()
 			floor[i].draw(&window);
 		}
 
-		player1.draw(&window, curpos, t, &font);
+		players[0].draw(&window, curpos, t, &font);
+		players[1].draw(&window, curpos, t, &font);
 		
 		Hole.draw(&window);
 		window.display();
 
-		if (player1.ball.checkCollisionTwoSpheres(&Hole))
+		if (players[0].ball.checkCollisionTwoSpheres(&Hole))
 		{
 			window.clear(sf::Color(255, 0, 0));
 
-			sf::Text wincongrat(std::string("RED PLAYER WON IN ") + std::to_string(player1.count) + std::string(" MOVES"), font, 50);
+			sf::Text wincongrat(std::string("RED PLAYER HAS WON IN ") + std::to_string(players[0].count) + std::string(" MOVES"), font, 50);
 			wincongrat.setFillColor(sf::Color(255, 255, 255));
-			wincongrat.setPosition(250, 335);
+			wincongrat.setPosition(210, 335);
+			window.draw(wincongrat);
 
+			wincongrat.setString(std::string("(press any button to close this window)"));
+			wincongrat.setCharacterSize(25);
+			wincongrat.setPosition(410, 385);
 			window.draw(wincongrat);
 
 			window.display();
@@ -194,16 +203,52 @@ int main()
 			}
 		}
 
-		for (int i = 0; i < 11; i++)
+		if (players[0].ball.checkCollisionTwoSpheres(&players[1].ball))
+			players[0].ball.collideSpheres(&players[1].ball, &window);
+
+		if (players[1].ball.checkCollisionTwoSpheres(&Hole))
 		{
-			player1.ball.collide(&walls[i], DT);
+			window.clear(sf::Color(0, 0, 255));
+
+			sf::Text wincongrat(std::string("BLUE PLAYER HAS WON IN ") + std::to_string(players[1].count) + std::string(" MOVES"), font, 50);
+			wincongrat.setFillColor(sf::Color(255, 255, 255));
+			wincongrat.setPosition(210, 335);
+			window.draw(wincongrat);
+
+			wincongrat.setString(std::string("(press any button to close this window)"));
+			wincongrat.setCharacterSize(25);
+			wincongrat.setPosition(410, 385);
+			window.draw(wincongrat);
+
+			window.display();
+
+			while (true)
+			{
+				window.pollEvent(event);
+				if ((event.type == sf::Event::Closed) || (event.type == sf::Event::KeyPressed) || (event.type == sf::Event::MouseButtonPressed))
+				{
+					window.close();
+					break;
+				}
+			}
 		}
-		player1.ball.flag = false;
 
-		if (pow(player1.ball.speed.x, 2) + pow(player1.ball.speed.y, 2) != 0)
-			player1.ball.friction(floor, N);
+		for (int j = 0; j < 2; j++)
+		{
+			for (int i = 0; i < 11; i++)
+			{
+				players[j].ball.collide(&walls[i], DT);
+			}
+			players[j].ball.flag = false;
+		}
 
-		player1.ball.move(DT);
+		if (pow(players[0].ball.speed.x, 2) + pow(players[0].ball.speed.y, 2) != 0)
+			players[0].ball.friction(floor, N);
+		if (pow(players[1].ball.speed.x, 2) + pow(players[1].ball.speed.y, 2) != 0)
+			players[1].ball.friction(floor, N);
+
+		players[0].ball.move(DT);
+		players[1].ball.move(DT);
 	}
 
 	return 0;

@@ -334,10 +334,6 @@ struct Sphere
     {
         float window_length = window->getSize().x;
         float window_width = window->getSize().y;
-        float vx10 = speed.x;
-        float vy10 = speed.y;
-        float vx20 = sphere2->speed.x;
-        float vy20 = sphere2->speed.y;
         float dist = sqrt(pow(sphere2->pos.x - pos.x, 2) + pow(sphere2->pos.y - pos.y, 2));
         float dist_x = sphere2->pos.x - pos.x;
         float dist_y = sphere2->pos.y - pos.y;
@@ -371,10 +367,9 @@ struct Sphere
         else
             pos.y -= (r + sphere2->r - dist) * dist_y / dist;
 
-        speed.x = (2 * sphere2->m * vx20 + (m - sphere2->m) * vx10) / (m + sphere2->m);
-        speed.y = (2 * sphere2->m * vy20 + (m - sphere2->m) * vy10) / (m + sphere2->m);
-        sphere2->speed.x = (2 * m * vx10 + (sphere2->m - m) * vx20) / (m + sphere2->m);
-        sphere2->speed.y = (2 * m * vy10 + (sphere2->m - m) * vy20) / (m + sphere2->m);
+        sf::Vector2f dspeed = (sphere2->pos - pos) * ((sphere2->speed.x - speed.x) * (sphere2->pos - pos).x + (sphere2->speed.y - speed.y) * (sphere2->pos - pos).y) / (4 * r * r);
+        speed = speed + dspeed;
+        sphere2->speed = sphere2->speed - dspeed;
     }
 };
 
@@ -451,7 +446,7 @@ struct Player
 
         std::string str = std::to_string(count);
         sf::Text text1(str, *font, 30);
-        text1.setFillColor(sf::Color(255, 0, 0));
+        text1.setFillColor(sf::Color(red, green, blue));
         text1.setPosition(A1 + (D1 - A1) * 0.6f + (B1 - A1) * 0.4f);
 
         window->draw(shape);
