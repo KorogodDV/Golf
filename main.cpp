@@ -12,140 +12,6 @@ void defWall(sf::ConvexShape* wall, sf::Vector2f A, sf::Vector2f B, sf::Vector2f
 	wall->setPoint(3, D);
 };
 
-struct controller
-{
-	sf::Vector2f pos;
-	float radius;
-	int red;
-	int green;
-	int blue;
-	bool play;
-
-	controller(sf::Vector2f pos, float radius, int red, int green, int blue, bool play)
-	{
-		this->radius = radius;
-		this->pos = pos;
-		this->red = red;
-		this->green = green;
-		this->blue = blue;
-		this->play = play;
-	}
-
-	sf::Vector2f direction(sf::Vector2f posCursor)
-	{
-		float length = sqrt(pow((posCursor - pos).x, 2) + pow((posCursor - pos).y, 2));
-		sf::Vector2f dir(0, 0);
-		if (length != 0)
-		{
-			dir = (posCursor - pos) / length;
-		}
-		return dir;
-	}
-
-	float force(float t)
-	{
-		return (1000 - abs(int(t * 10) % 2001 - 1000)) / 200.f;
-	}
-
-	void draw(sf::RenderWindow* window)
-	{
-		sf::CircleShape circle1(0, 30);
-		circle1.setRadius(radius);
-		circle1.setFillColor(sf::Color(red, green, blue));
-		circle1.setPosition(pos - (sf::Vector2f(1, 1) * radius));
-		sf::CircleShape circle2(0, 30);
-		circle2.setRadius(radius / 4);
-		circle2.setFillColor(sf::Color(red / 2, green / 2, blue / 2));
-		circle2.setPosition(pos - (sf::Vector2f(1, 1) * radius / float(4)));
-
-		window->draw(circle1);
-		window->draw(circle2);
-	}
-};
-
-void drawController(sf::RenderWindow* window, controller Controller, sf::Vector2f posBall, sf::Vector2f posCursor, float t)
-{
-	sf::Vector2f dir = Controller.direction(posCursor);
-
-	sf::Vector2f ort(-dir.y, dir.x);
-	float length = sqrt(pow(ort.x, 2) + pow(ort.y, 2));
-	ort = ort / length;
-
-	sf::Vector2f A = posBall + ort * float(3);
-	sf::Vector2f D = posBall - ort * float(3);
-	sf::Vector2f B = posBall + dir * float(100) + ort * float(3);
-	sf::Vector2f C = posBall + dir * float(100) - ort * float(3);
-	sf::Vector2f E = B + ort * float(3);
-	sf::Vector2f F = C - ort * float(3);
-	sf::Vector2f G = posBall + dir * float(120);
-	float force = Controller.force(t) * 20;
-	sf::Vector2f B1 = posBall + dir * float(force) + ort * float(3);
-	sf::Vector2f C1 = posBall + dir * float(force) - ort * float(3);
-
-	sf::ConvexShape arrow1;
-	sf::ConvexShape arrow2;
-	sf::ConvexShape arrow3;
-	arrow1.setPointCount(4);
-	arrow2.setPointCount(3);
-	arrow3.setPointCount(4);
-	arrow1.setPoint(0, A);
-	arrow1.setPoint(1, B);
-	arrow1.setPoint(2, C);
-	arrow1.setPoint(3, D);
-
-	arrow2.setPoint(0, E);
-	arrow2.setPoint(1, G);
-	arrow2.setPoint(2, F);
-
-	arrow3.setPoint(0, A);
-	arrow3.setPoint(1, B1);
-	arrow3.setPoint(2, C1);
-	arrow3.setPoint(3, D);
-
-	arrow1.setFillColor(sf::Color(14, 241, 255));
-	arrow2.setFillColor(sf::Color(14, 241, 255));
-	arrow3.setFillColor(sf::Color(0, 0, 255));
-
-	sf::CircleShape circle1(0, 30);
-	circle1.setRadius(Controller.radius);
-	circle1.setFillColor(sf::Color(Controller.red, Controller.green, Controller.blue));
-	circle1.setPosition(Controller.pos - (sf::Vector2f(1, 1) * Controller.radius));
-	sf::CircleShape circle2(0, 30);
-	circle2.setRadius(Controller.radius / 4);
-	circle2.setFillColor(sf::Color(Controller.red / 2, Controller.green / 2, Controller.blue / 2));
-	circle2.setPosition(Controller.pos - (sf::Vector2f(1, 1) * Controller.radius / float(4)));
-
-	window->draw(circle1);
-	window->draw(circle2);
-	window->draw(arrow1);
-	window->draw(arrow2);
-	window->draw(arrow3);
-};
-
-void drawShots(sf::RenderWindow* window, sf::Vector2f A, sf::Vector2f B, sf::Vector2f C, sf::Vector2f D, int count, sf::Font* font)
-{
-	sf::ConvexShape shape;
-	shape.setPointCount(4);
-	shape.setPoint(0, A);
-	shape.setPoint(1, B);
-	shape.setPoint(2, C);
-	shape.setPoint(3, D);
-	shape.setFillColor(sf::Color(0, 0, 0));
-
-	sf::Text text("S H O T S", *font, 15);
-	text.setFillColor(sf::Color(255, 255, 255));
-	text.setPosition(A + (D - A) / float(4) + (B - A) / float(10));
-
-	std::string str = std::to_string(count);
-	sf::Text text1(str, *font, 30);
-	text1.setFillColor(sf::Color(255, 0, 0));
-	text1.setPosition(A + (D - A) * float(3) / float(5) + (B - A) * float(2) / float(5));
-
-	window->draw(shape);
-	window->draw(text);
-	window->draw(text1);
-}
-
 const int window_length = 1280;
 const int window_width = 720;
 const float DT = 1.0;
@@ -180,10 +46,7 @@ int main()
 	defWall(&walls[8], sf::Vector2f(560, 400), sf::Vector2f(760, 400), sf::Vector2f(760, 440), sf::Vector2f(560, 440));
 	defWall(&walls[9], sf::Vector2f(680, 520), sf::Vector2f(880, 520), sf::Vector2f(880, 560), sf::Vector2f(680, 560));
 	defWall(&walls[10], sf::Vector2f(1040, 0), sf::Vector2f(1280, 0), sf::Vector2f(1280, 720), sf::Vector2f(1040, 720));
-
-	sf::Vector2f curpos(0, 0);
-	float t = 0;
-	controller Controller(sf::Vector2f(100, 600), 75, 255, 0, 0, false);
+	
 
 	//INITIALIZING SAND AND BUSTERS
 
@@ -220,7 +83,7 @@ int main()
 	floor[27] = { 1, sf::Vector2f(-1, 0), sf::Vector2f(720, 440), sf::Vector2f(760, 440), sf::Vector2f(760, 480), sf::Vector2f(720, 480) };
 	floor[28] = { 1, sf::Vector2f(-1, 0), sf::Vector2f(720, 480), sf::Vector2f(760, 480), sf::Vector2f(760, 520), sf::Vector2f(720, 520) };
 	floor[29] = { 1, sf::Vector2f(-1, 0), sf::Vector2f(680, 440), sf::Vector2f(720, 440), sf::Vector2f(720, 480), sf::Vector2f(680, 480) };
-	floor[30] = { 1, sf::Vector2f(-1, 0), sf::Vector2f(680, 480), sf::Vector2f(720, 480), sf::Vector2f(720, 520), sf::Vector2f(680, 520)};
+	floor[30] = { 1, sf::Vector2f(-1, 0), sf::Vector2f(680, 480), sf::Vector2f(720, 480), sf::Vector2f(720, 520), sf::Vector2f(680, 520) };
 	floor[31] = { 1, sf::Vector2f(0, 1), sf::Vector2f(640, 440), sf::Vector2f(680, 440), sf::Vector2f(680, 480), sf::Vector2f(640, 480) };
 	floor[32] = { 1, sf::Vector2f(0, 1), sf::Vector2f(640, 480), sf::Vector2f(680, 480), sf::Vector2f(680, 520), sf::Vector2f(640, 520) };
 	floor[33] = { 1, sf::Vector2f(0, 1), sf::Vector2f(600, 440), sf::Vector2f(640, 440), sf::Vector2f(640, 480), sf::Vector2f(600, 480) };
@@ -248,14 +111,15 @@ int main()
 	floor[55] = { 1, sf::Vector2f(1, 0), sf::Vector2f(760, 640), sf::Vector2f(800, 640), sf::Vector2f(800, 680), sf::Vector2f(760, 680) };
 	floor[56] = { 1, sf::Vector2f(1, 0), sf::Vector2f(800, 640), sf::Vector2f(840, 640), sf::Vector2f(840, 680), sf::Vector2f(800, 680) };
 	floor[57] = { 1, sf::Vector2f(1, 0), sf::Vector2f(840, 640), sf::Vector2f(880, 640), sf::Vector2f(880, 680), sf::Vector2f(840, 680) };
-
 	//INITIALIZING PLAYERS
 
-	Sphere ball1 = { {901, 100}, {0, 0}, {0, 0}, 20, 1, 255, 0 ,0 };
-	int count = 0;
+	Sphere ball1 = { {300, 100}, {0, 0}, {0, 0}, 20, 1, 255, 0 ,0 };
+	Player player1(ball1, 0, sf::Vector2f(100, 600), 75, 255, 0, 0, sf::Vector2f(100, 450), 100, false);
+	
+	sf::Vector2f curpos(0, 0);
+	float t = 0;
 
 	//INITIALIZING HOLE
-
 	Sphere Hole = { {1000, 100}, {0, 0}, {0, 0}, 20, 1, 0, 0, 0 };
 
 	while (window.isOpen())
@@ -268,24 +132,24 @@ int main()
 				window.close();
 				break;
 			}
-			if ((pow(ball1.speed.x, 2) + pow(ball1.speed.y, 2) == 0) && event.type == sf::Event::MouseButtonPressed && (pow(curpos.x - Controller.pos.x, 2) + pow(curpos.y - Controller.pos.y, 2) < pow(Controller.radius, 2)))
+			if ((pow(player1.ball.speed.x, 2) + pow(player1.ball.speed.y, 2) == 0) && event.type == sf::Event::MouseButtonPressed && (pow(curpos.x - player1.pos.x, 2) + pow(curpos.y - player1.pos.y, 2) < pow(player1.radius, 2)))
 			{
-				Controller.play = true;
+				player1.play = true;
 			}
 			if (event.type == sf::Event::MouseMoved)
 			{
 				curpos = sf::Vector2f(event.mouseMove.x, event.mouseMove.y);
 			}
-			if (event.type == sf::Event::MouseButtonReleased && Controller.play)
+			if (event.type == sf::Event::MouseButtonReleased && player1.play)
 			{
-				Controller.play = false;
-				ball1.speed = Controller.direction(curpos) * Controller.force(t);
-				count++;
+				player1.play = false;
+				player1.ball.speed = player1.direction(curpos) * player1.force(t);
+				player1.count++;
 				t = 0;
 			}
 		}
 
-		if (Controller.play)
+		if (player1.play)
 		{
 			t += DT;
 		}
@@ -302,32 +166,19 @@ int main()
 			floor[i].draw(&window);
 		}
 
-		if (Controller.play)
-		{
-			drawController(&window, Controller, ball1.pos, curpos, t);
-		}
-		else
-		{
-			Controller.draw(&window);
-		};
-
-		drawShots(&window, sf::Vector2f(50, 400), sf::Vector2f(150, 400), sf::Vector2f(150, 500), sf::Vector2f(50, 500), count, &font);
-		ball1.draw(&window);
+		player1.draw(&window, curpos, t, &font);
+		
 		Hole.draw(&window);
 		window.display();
 
-		if (ball1.checkCollisionTwoSpheres(&Hole))
+		if (player1.ball.checkCollisionTwoSpheres(&Hole))
 		{
 			window.clear(sf::Color(255, 0, 0));
 
-			sf::Text wincongrat(std::string("RED PLAYER WON IN ") + std::to_string(count) + std::string(" MOVES"), font, 50);
+			sf::Text wincongrat(std::string("RED PLAYER WON IN ") + std::to_string(player1.count) + std::string(" MOVES"), font, 50);
 			wincongrat.setFillColor(sf::Color(255, 255, 255));
 			wincongrat.setPosition(250, 335);
-			window.draw(wincongrat);
 
-			wincongrat.setString(std::string("(press any button to close this window)"));
-			wincongrat.setCharacterSize(25);
-			wincongrat.setPosition(400, 385);
 			window.draw(wincongrat);
 
 			window.display();
@@ -345,14 +196,14 @@ int main()
 
 		for (int i = 0; i < 11; i++)
 		{
-			ball1.collide(&walls[i], DT);
+			player1.ball.collide(&walls[i], DT);
 		}
-		ball1.flag = false;
+		player1.ball.flag = false;
 
-		if (pow(ball1.speed.x, 2) + pow(ball1.speed.y, 2) != 0)
-			ball1.friction(floor, N);
+		if (pow(player1.ball.speed.x, 2) + pow(player1.ball.speed.y, 2) != 0)
+			player1.ball.friction(floor, N);
 
-		ball1.move(DT);
+		player1.ball.move(DT);
 	}
 
 	return 0;
