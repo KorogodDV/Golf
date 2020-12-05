@@ -135,7 +135,7 @@ int main()
 				window.close();
 				break;
 			}
-			if ((pow(players[(move + 1) % 2].ball.speed.x, 2) + pow(players[(move + 1) % 2].ball.speed.y, 2) == 0) && event.type == sf::Event::MouseButtonPressed && (pow(curpos.x - players[move].pos.x, 2) + pow(curpos.y - players[move].pos.y, 2) < pow(players[move].radius, 2)))
+			if ((!players[move].play) &&(pow(players[(move + 1) % 2].ball.speed.x, 2) + pow(players[(move + 1) % 2].ball.speed.y, 2) == 0) && event.type == sf::Event::MouseButtonPressed && (pow(curpos.x - players[move].pos.x, 2) + pow(curpos.y - players[move].pos.y, 2) < pow(players[move].radius, 2)))
 			{
 				players[move].play = true;
 			}
