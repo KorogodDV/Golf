@@ -28,15 +28,14 @@ const int window_length = 1280;
 const int window_width = 720;
 const float DT = 1.0;
 
-void endPlay(sf::RenderWindow* window, Player player, std::string s, sf::Font* font)
+void endPlay(sf::RenderWindow* window, Player player, sf::Font* font)
 {
 	window->clear(sf::Color(player.red, player.green, player.blue));
 
-	sf::Text wincongrat(" ", *font, 50);
+	sf::Text wincongrat(player.name + std::string(" PLAYER HAS WON IN ") + std::to_string(player.count) + std::string(" MOVES"), *font, 50);
 	wincongrat.setFillColor(sf::Color(255, 255, 255));
 	wincongrat.setPosition(210, 335);
-	wincongrat.setString(s + std::string(" PLAYER HAS WON IN ") + std::to_string(player.count) + std::string(" MOVES"));
-	
+
 	window->draw(wincongrat);
 
 	wincongrat.setString(std::string("(press any button to close this window)"));
@@ -148,7 +147,7 @@ int main()
 	Sphere ball1 = { {300, 100}, {0, 0}, {0, 0}, 20, 1, 255, 0 ,0 };
 	Sphere ball2 = { {350, 100}, {0, 0}, {0, 0}, 20, 1, 0, 0 , 255 };
 
-	Player players[2] = { {ball1, 0, sf::Vector2f(100, 600), 75, 255, 0, 0, sf::Vector2f(100, 450), 100, false}, {ball2, 0, sf::Vector2f(1180, 600), 75, 0, 0, 255, sf::Vector2f(1180, 450), 100, false} };
+	Player players[2] = { {"RED", ball1, 0, sf::Vector2f(100, 600), 75, 255, 0, 0, sf::Vector2f(100, 450), 100, false}, {"BLUE", ball2, 0, sf::Vector2f(1180, 600), 75, 0, 0, 255, sf::Vector2f(1180, 450), 100, false} };
 	
 	sf::Vector2f curpos(0, 0);
 	float t = 0;
@@ -198,12 +197,10 @@ int main()
 			}
 		}
 
-		if (playEnd)
-		{
-			if (players[0].count > players[1].count)
-				endPlay(&window, players[0], "RED", &font);
+		if (players[0].count > players[1].count)
+				endPlay(&window, players[0], &font);
 			else
-				endPlay(&window, players[1], "BLUE", &font);
+				endPlay(&window, players[1], &font);
 		}
 		else
 		{
