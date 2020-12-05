@@ -16,6 +16,25 @@ const int window_length = 1280;
 const int window_width = 720;
 const float DT = 1.0;
 
+void endPlay(sf::RenderWindow* window, Player player, std::string s, sf::Font* font)
+{
+	window->clear(sf::Color(player.red, player.green, player.blue));
+
+	sf::Text wincongrat(" ", *font, 50);
+	wincongrat.setFillColor(sf::Color(255, 255, 255));
+	wincongrat.setPosition(210, 335);
+	wincongrat.setString(s + std::string(" PLAYER HAS WON IN ") + std::to_string(player.count) + std::string(" MOVES"));
+	
+	window->draw(wincongrat);
+
+	wincongrat.setString(std::string("(press any button to close this window)"));
+	wincongrat.setCharacterSize(25);
+	wincongrat.setPosition(410, 385);
+	window->draw(wincongrat);
+
+	window->display();
+};
+
 int main()
 {
 	// CREATING WINDOW
@@ -151,51 +170,9 @@ int main()
 				t = 0;
 				move = (move + 1) % 2;
 			}
-		}
-
-		if (players[move].play)
-		{
-			t += DT;
-		}
-
-		window.clear(sf::Color(50, 205, 50));
-
-		for (int i = 0; i < 11; i++)
-		{
-			window.draw(walls[i]);
-		}
-
-		for (int i = 0; i < 58; i++)
-		{
-			floor[i].draw(&window);
-		}
-
-		players[0].draw(&window, curpos, t, &font);
-		players[1].draw(&window, curpos, t, &font);
-		
-		Hole.draw(&window);
-		window.display();
-
-		if (players[0].ball.checkCollisionTwoSpheres(&Hole))
-		{
-			window.clear(sf::Color(255, 0, 0));
-
-			sf::Text wincongrat(std::string("RED PLAYER HAS WON IN ") + std::to_string(players[0].count) + std::string(" MOVES"), font, 50);
-			wincongrat.setFillColor(sf::Color(255, 255, 255));
-			wincongrat.setPosition(210, 335);
-			window.draw(wincongrat);
-
-			wincongrat.setString(std::string("(press any button to close this window)"));
-			wincongrat.setCharacterSize(25);
-			wincongrat.setPosition(410, 385);
-			window.draw(wincongrat);
-
-			window.display();
-
-			while (true)
+			if ((event.type == sf::Event::KeyPressed) || (event.type == sf::Event::MouseButtonPressed))
 			{
-				window.pollEvent(event);
-				if ((event.type == sf::Event::Closed) || (event.type == sf::Event::KeyPressed) || (event.type == sf::Event::MouseButtonPressed))
+				if (playEnd)
 				{
 					window.close();
 					break;
@@ -203,52 +180,63 @@ int main()
 			}
 		}
 
-		if (players[0].ball.checkCollisionTwoSpheres(&players[1].ball))
-			players[0].ball.collideSpheres(&players[1].ball, &window);
-
-		if (players[1].ball.checkCollisionTwoSpheres(&Hole))
+		if (playEnd)
 		{
-			window.clear(sf::Color(0, 0, 255));
-
-			sf::Text wincongrat(std::string("BLUE PLAYER HAS WON IN ") + std::to_string(players[1].count) + std::string(" MOVES"), font, 50);
-			wincongrat.setFillColor(sf::Color(255, 255, 255));
-			wincongrat.setPosition(210, 335);
-			window.draw(wincongrat);
-
-			wincongrat.setString(std::string("(press any button to close this window)"));
-			wincongrat.setCharacterSize(25);
-			wincongrat.setPosition(410, 385);
-			window.draw(wincongrat);
-
-			window.display();
-
-			while (true)
-			{
-				window.pollEvent(event);
-				if ((event.type == sf::Event::Closed) || (event.type == sf::Event::KeyPressed) || (event.type == sf::Event::MouseButtonPressed))
-				{
-					window.close();
-					break;
-				}
-			}
+			if (players[0].count > players[1].count)
+				endPlay(&window, players[0], "RED", &font);
+			else
+				endPlay(&window, players[1], "BLUE",  &font);
 		}
-
-		for (int j = 0; j < 2; j++)
+		else
 		{
+			if (players[move].play)
+			{
+				t += DT;
+			}
+
+			window.clear(sf::Color(50, 205, 50));
+
 			for (int i = 0; i < 11; i++)
 			{
-				players[j].ball.collide(&walls[i], DT);
+				window.draw(walls[i]);
 			}
-			players[j].ball.flag = false;
+
+			for (int i = 0; i < 58; i++)
+			{
+				floor[i].draw(&window);
+			}
+
+			players[0].draw(&window, curpos, t, &font);
+			players[1].draw(&window, curpos, t, &font);
+
+			Hole.draw(&window);
+			window.display();
+
+			if (players[0].ball.checkCollisionTwoSpheres(&Hole) || players[1].ball.checkCollisionTwoSpheres(&Hole))
+			{
+				playEnd = true;
+			}
+
+			if (players[0].ball.checkCollisionTwoSpheres(&players[1].ball))
+				players[0].ball.collideSpheres(&players[1].ball, &window);
+
+			for (int j = 0; j < 2; j++)
+			{
+				for (int i = 0; i < 11; i++)
+				{
+					players[j].ball.collide(&walls[i], DT);
+				}
+				players[j].ball.flag = false;
+			}
+
+			if (pow(players[0].ball.speed.x, 2) + pow(players[0].ball.speed.y, 2) != 0)
+				players[0].ball.friction(floor, N);
+			if (pow(players[1].ball.speed.x, 2) + pow(players[1].ball.speed.y, 2) != 0)
+				players[1].ball.friction(floor, N);
+
+			players[0].ball.move(DT);
+			players[1].ball.move(DT);
 		}
-
-		if (pow(players[0].ball.speed.x, 2) + pow(players[0].ball.speed.y, 2) != 0)
-			players[0].ball.friction(floor, N);
-		if (pow(players[1].ball.speed.x, 2) + pow(players[1].ball.speed.y, 2) != 0)
-			players[1].ball.friction(floor, N);
-
-		players[0].ball.move(DT);
-		players[1].ball.move(DT);
 	}
 
 	return 0;
