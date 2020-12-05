@@ -140,6 +140,7 @@ int main()
 	sf::Vector2f curpos(0, 0);
 	float t = 0;
 	int move = 0;
+	bool playEnd = false;
 
 	//INITIALIZING HOLE
 	Sphere Hole = { {1000, 100}, {0, 0}, {0, 0}, 20, 1, 0, 0, 0 };
