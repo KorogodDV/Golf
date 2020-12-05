@@ -213,13 +213,14 @@ int main()
 			Hole.draw(&window);
 			window.display();
 
+			if (players[0].ball.checkCollisionTwoSpheres(&players[1].ball))
+				players[0].ball.collideSpheres(&players[1].ball, &window);
+
 			if (players[0].ball.checkCollisionTwoSpheres(&Hole) || players[1].ball.checkCollisionTwoSpheres(&Hole))
 			{
 				playEnd = true;
 			}
 
-			if (players[0].ball.checkCollisionTwoSpheres(&players[1].ball))
-				players[0].ball.collideSpheres(&players[1].ball, &window);
 
 			for (int j = 0; j < 2; j++)
 			{
