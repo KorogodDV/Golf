@@ -4,6 +4,28 @@
 #include <cassert>
 #include "Floor.h"
 
+float len(sf::Vector2f vect)
+{
+    return sqrt(pow(vect.x, 2) + pow(vect.y, 2));
+}
+
+sf::Vector2f calculatingIntersectionPoint(sf::Vector2f speed, sf::Vector2f point, sf::Vector2f newpos, float r)
+{
+    sf::Vector2f res;
+    if (speed.x == 0)
+    {
+        res.x = point.x;
+        res.y = newpos.y + sqrt(pow(r, 2) - pow(res.x - newpos.x, 2)) * speed.y / abs(speed.y);
+        return res;
+    }
+    float a = 1 + pow(speed.y / speed.x, 2);
+    float b = -2 * (newpos.x + speed.y / speed.x * (newpos.y - point.y) + point.x * pow(speed.y / speed.x, 2));
+    float c = pow(newpos.x, 2) + pow(point.y - newpos.y, 2) - 2 * (point.y - newpos.y) * speed.y / speed.x * point.x + pow(speed.y / speed.x * point.x, 2) - pow(r, 2);
+    res.x = (-b + speed.x / abs(speed.x) * sqrt(pow(b, 2) - 4 * a * c)) / (2 * a);
+    res.y = point.y + speed.y / speed.x * (res.x - point.x);
+    return res;
+}
+
 struct Sphere
 {
     sf::Vector2f pos;
@@ -173,100 +195,36 @@ struct Sphere
         }
         else
         {
+            sf::Vector2f intersectionPoint;
             if (newpos.x < wall->getPoint(0).x)
             {
                 if (newpos.y < wall->getPoint(0).y)
                 {
-                    float x;
-                    float y;
-                    if (speed.x == 0)
-                    {
-                        x = wall->getPoint(0).x;
-                        y = newpos.y + sqrt(pow(r, 2) - pow(x - newpos.x, 2)) * speed.y / abs(speed.y);
-                    }
-                    else
-                    {
-                        float a = 1 + pow(speed.y / speed.x, 2);
-                        float b = -2 * (newpos.x + speed.y / speed.x * (newpos.y - wall->getPoint(0).y) + wall->getPoint(0).x * pow(speed.y / speed.x, 2));
-                        float c = pow(newpos.x, 2) + pow(wall->getPoint(0).y - newpos.y, 2) - 2 * (wall->getPoint(0).y - newpos.y) * speed.y / speed.x * wall->getPoint(0).x + pow(speed.y / speed.x * wall->getPoint(0).x, 2) - pow(r, 2);
-                        x = (-b + speed.x / abs(speed.x) * sqrt(pow(b, 2) - 4 * a * c)) / (2 * a);
-                        y = wall->getPoint(0).y + speed.y / speed.x * (x - wall->getPoint(0).x);
-                    }
-                    pos = newpos - sf::Vector2f(x - wall->getPoint(0).x, y - wall->getPoint(0).y);
-                    sf::Vector2f e = sf::Vector2f(x - newpos.x, y - newpos.y);
-                    speed = e * (-2 * (speed.x * e.x + speed.y * e.y) / ((x - newpos.x) * (x - newpos.x) + (y - newpos.y) * (y - newpos.y))) + speed;
-                    pos -= speed * DT;
+                    intersectionPoint = calculatingIntersectionPoint(speed, wall->getPoint(0), newpos, r);
+                    pos = newpos - intersectionPoint + wall->getPoint(0);
                 }
                 else
                 {
-                    float x;
-                    float y;
-                    if (speed.x == 0)
-                    {
-                        x = wall->getPoint(3).x;
-                        y = newpos.y + sqrt(pow(r, 2) - pow(x - newpos.x, 2)) * speed.y / abs(speed.y);
-                    }
-                    else
-                    {
-                        float a = 1 + pow(speed.y / speed.x, 2);
-                        float b = -2 * (newpos.x + speed.y / speed.x * (newpos.y - wall->getPoint(3).y) + wall->getPoint(3).x * pow(speed.y / speed.x, 2));
-                        float c = pow(newpos.x, 2) + pow(wall->getPoint(3).y - newpos.y, 2) - 2 * (wall->getPoint(3).y - newpos.y) * speed.y / speed.x * wall->getPoint(3).x + pow(speed.y / speed.x * wall->getPoint(3).x, 2) - pow(r, 2);
-                        x = (-b + speed.x / abs(speed.x) * sqrt(pow(b, 2) - 4 * a * c)) / (2 * a);
-                        y = wall->getPoint(3).y + speed.y / speed.x * (x - wall->getPoint(3).x);
-                    }
-                    pos = newpos - sf::Vector2f(x - wall->getPoint(3).x, y - wall->getPoint(3).y);
-                    sf::Vector2f e = sf::Vector2f(x - newpos.x, y - newpos.y);
-                    speed = e * (-2 * (speed.x * e.x + speed.y * e.y) / ((x - newpos.x) * (x - newpos.x) + (y - newpos.y) * (y - newpos.y))) + speed;
-                    pos -= speed * DT;
+                    intersectionPoint = calculatingIntersectionPoint(speed, wall->getPoint(3), newpos, r);
+                    pos = newpos - intersectionPoint + wall->getPoint(3);
                 }
             }
             else
             {
                 if (newpos.y < wall->getPoint(1).y)
                 {
-                    float x;
-                    float y;
-                    if (speed.x == 0)
-                    {
-                        x = wall->getPoint(1).x;
-                        y = newpos.y + sqrt(pow(r, 2) - pow(x - newpos.x, 2)) * speed.y / abs(speed.y);
-                    }
-                    else
-                    {
-                        float a = 1 + pow(speed.y / speed.x, 2);
-                        float b = -2 * (newpos.x + speed.y / speed.x * (newpos.y - wall->getPoint(1).y) + wall->getPoint(1).x * pow(speed.y / speed.x, 2));
-                        float c = pow(newpos.x, 2) + pow(wall->getPoint(1).y - newpos.y, 2) - 2 * (wall->getPoint(1).y - newpos.y) * speed.y / speed.x * wall->getPoint(1).x + pow(speed.y / speed.x * wall->getPoint(1).x, 2) - pow(r, 2);
-                        x = (-b + speed.x / abs(speed.x) * sqrt(pow(b, 2) - 4 * a * c)) / (2 * a);
-                        y = wall->getPoint(1).y + speed.y / speed.x * (x - wall->getPoint(1).x);
-                    }
-                    pos = newpos - sf::Vector2f(x - wall->getPoint(1).x, y - wall->getPoint(1).y);
-                    sf::Vector2f e = sf::Vector2f(x - newpos.x, y - newpos.y);
-                    speed = e * (-2 * (speed.x * e.x + speed.y * e.y) / ((x - newpos.x) * (x - newpos.x) + (y - newpos.y) * (y - newpos.y))) + speed;
-                    pos -= speed * DT;
+                    intersectionPoint = calculatingIntersectionPoint(speed, wall->getPoint(1), newpos, r);
+                    pos = newpos - intersectionPoint + wall->getPoint(1);
                 }
                 else
                 {
-                    float x;
-                    float y;
-                    if (speed.x == 0)
-                    {
-                        x = wall->getPoint(2).x;
-                        y = newpos.y + sqrt(pow(r, 2) - pow(x - newpos.x, 2)) * speed.y / abs(speed.y);
-                    }
-                    else
-                    {
-                        float a = 1 + pow(speed.y / speed.x, 2);
-                        float b = -2 * (newpos.x + speed.y / speed.x * (newpos.y - wall->getPoint(2).y) + wall->getPoint(2).x * pow(speed.y / speed.x, 2));
-                        float c = pow(newpos.x, 2) + pow(wall->getPoint(2).y - newpos.y, 2) - 2 * (wall->getPoint(2).y - newpos.y) * speed.y / speed.x * wall->getPoint(2).x + pow(speed.y / speed.x * wall->getPoint(2).x, 2) - pow(r, 2);
-                        x = (-b + speed.x / abs(speed.x) * sqrt(pow(b, 2) - 4 * a * c)) / (2 * a);
-                        y = wall->getPoint(2).y + speed.y / speed.x * (x - wall->getPoint(2).x);
-                    }
-                    pos = newpos - sf::Vector2f(x - wall->getPoint(2).x, y - wall->getPoint(2).y);
-                    sf::Vector2f e = sf::Vector2f(x - newpos.x, y - newpos.y);
-                    speed = e * (-2 * (speed.x * e.x + speed.y * e.y) / ((x - newpos.x) * (x - newpos.x) + (y - newpos.y) * (y - newpos.y))) + speed;
-                    pos -= speed * DT;
+                    intersectionPoint = calculatingIntersectionPoint(speed, wall->getPoint(2), newpos, r);
+                    pos = newpos - intersectionPoint + wall->getPoint(2);
                 }
             }
+            sf::Vector2f e = (intersectionPoint - newpos);
+            speed = e * (-2 * (speed.x * (intersectionPoint - newpos).x + speed.y * (intersectionPoint - newpos).y) / float(pow(len((intersectionPoint - newpos)), 2))) + speed;
+            pos -= speed * DT;
         }
     }
 

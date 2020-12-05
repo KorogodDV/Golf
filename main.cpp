@@ -132,9 +132,10 @@ int main()
 	floor[55] = { 1, sf::Vector2f(1, 0), sf::Vector2f(760, 640), sf::Vector2f(800, 640), sf::Vector2f(800, 680), sf::Vector2f(760, 680) };
 	floor[56] = { 1, sf::Vector2f(1, 0), sf::Vector2f(800, 640), sf::Vector2f(840, 640), sf::Vector2f(840, 680), sf::Vector2f(800, 680) };
 	floor[57] = { 1, sf::Vector2f(1, 0), sf::Vector2f(840, 640), sf::Vector2f(880, 640), sf::Vector2f(880, 680), sf::Vector2f(840, 680) };
+
 	//INITIALIZING PLAYERS
 
-	Sphere ball1 = { {300, 100}, {5, 5}, {0, 0}, 20, 1, 255, 0 ,0 };
+	Sphere ball1 = { {300, 100}, {0, 0}, {0, 0}, 20, 1, 255, 0 ,0 };
 	Sphere ball2 = { {350, 100}, {0, 0}, {0, 0}, 20, 1, 0, 0 , 255 };
 
 	Player players[2] = { {ball1, 0, sf::Vector2f(100, 600), 75, 255, 0, 0, sf::Vector2f(100, 450), 100, false}, {ball2, 0, sf::Vector2f(1180, 600), 75, 0, 0, 255, sf::Vector2f(1180, 450), 100, false} };
@@ -223,16 +224,13 @@ int main()
 				playEnd = true;
 			}
 
+			players[0].ball.collideWithWalls(walls, DT);
+			players[1].ball.collideWithWalls(walls, DT);
 
-			for (int j = 0; j < 2; j++)
-			{
-				players[j].ball.collideWithWalls(walls, DT);
-			}
-
-			/*if (pow(players[0].ball.speed.x, 2) + pow(players[0].ball.speed.y, 2) != 0)
+			if (pow(players[0].ball.speed.x, 2) + pow(players[0].ball.speed.y, 2) != 0)
 				players[0].ball.friction(floor, N);
 			if (pow(players[1].ball.speed.x, 2) + pow(players[1].ball.speed.y, 2) != 0)
-				players[1].ball.friction(floor, N);*/
+				players[1].ball.friction(floor, N);
 
 			players[0].ball.move(DT);
 			players[1].ball.move(DT);
