@@ -223,13 +223,13 @@ int main()
 
 			for (int j = 0; j < 2; j++)
 			{
-				players[j].ball.collide(&walls[i], DT);
+				players[j].ball.collideWithWalls(walls, DT);
 			}
 
-		/*if (pow(players[0].ball.speed.x, 2) + pow(players[0].ball.speed.y, 2) != 0)
-			players[0].ball.friction(floor, N);
-		if (pow(players[1].ball.speed.x, 2) + pow(players[1].ball.speed.y, 2) != 0)
-			players[1].ball.friction(floor, N);*/
+			/*if (pow(players[0].ball.speed.x, 2) + pow(players[0].ball.speed.y, 2) != 0)
+				players[0].ball.friction(floor, N);
+			if (pow(players[1].ball.speed.x, 2) + pow(players[1].ball.speed.y, 2) != 0)
+				players[1].ball.friction(floor, N);*/
 
 			players[0].ball.move(DT);
 			players[1].ball.move(DT);
