@@ -93,9 +93,8 @@ struct Sphere
     int red;
     int green;
     int blue;
-    bool flag;
 
-    Sphere(sf::Vector2f pos = sf::Vector2f(0, 0), sf::Vector2f speed = sf::Vector2f(0, 0), sf::Vector2f acceleration = sf::Vector2f(0, 0), float r = 0, float m = 1, int red = 0, int green = 0, int blue = 0, bool flag = false)
+    Sphere(sf::Vector2f pos = sf::Vector2f(0, 0), sf::Vector2f speed = sf::Vector2f(0, 0), sf::Vector2f acceleration = sf::Vector2f(0, 0), float r = 0, float m = 1, int red = 0, int green = 0, int blue = 0)
     {
         this->pos = pos;
         this->speed = speed;
@@ -105,7 +104,6 @@ struct Sphere
         this->red = red;
         this->green = green;
         this->blue = blue;
-        this->flag = flag;
         
     }
 
@@ -128,8 +126,6 @@ struct Sphere
     void move(const float DT)
     {
         speed = speed + acceleration * DT;
-        /*if (pow(speed.x, 2) + pow(speed.y, 2) > 225)
-            speed = speed / float(pow(speed.x, 2) + pow(speed.y, 2)) * 15.f;*/
         pos = pos + speed * DT;
     }
 
@@ -163,37 +159,69 @@ struct Sphere
         }
     }
 
-    void collide(sf::ConvexShape* wall, const float DT)
+    int checkCollisionWithWall(sf::ConvexShape* wall, const float DT)
     {
         sf::Vector2f newpos = pos + speed * DT;
         sf::Rect<float> testRect = { newpos - sf::Vector2f(r, r), sf::Vector2f(2 * r, 2 * r) };
 
         if (!testRect.intersects(wall->getGlobalBounds()))
-        {}
-        else if (wall->getGlobalBounds().contains(newpos))
+            return 0;
+        if ((wall->getPoint(1).x >= newpos.x && newpos.x >= wall->getPoint(0).x) || (wall->getPoint(1).y <= newpos.y && newpos.y <= wall->getPoint(2).y))
+            return 1;
+        if ((pow(r, 2) > pow((newpos - wall->getPoint(0)).x, 2) + pow((newpos - wall->getPoint(0)).y, 2) || pow(r, 2) > pow((newpos - wall->getPoint(1)).x, 2) + pow((newpos - wall->getPoint(1)).y, 2) || pow(r, 2) > pow((newpos - wall->getPoint(2)).x, 2) + pow((newpos - wall->getPoint(2)).y, 2) || pow(r, 2) > pow((newpos - wall->getPoint(3)).x, 2) + pow((newpos - wall->getPoint(3)).y, 2)))
+            return 2;
+        return 0;
+    }
+
+    void collideWithWalls(sf::ConvexShape* walls, const float DT)
+    {
+        int collision_prop[5] = { 0, -1, -1 , -1, -1 };
+        for (int i = 0; i < 11; i++)
         {
-            if (abs(newpos.y - wall->getPoint(0).y) + abs(pos.y - wall->getPoint(0).y) == abs(newpos.y - pos.y) && wall->getPoint(0).x <= wall->getPoint(0).y * (newpos.x - pos.x) / (newpos.y - pos.y) + (newpos.y * pos.x - newpos.x * pos.y) / (newpos.y - pos.y) <= wall->getPoint(1).x)
+            int collision_type = this->checkCollisionWithWall(&walls[i], DT);
+            if (collision_type)
             {
-                pos.y = 2 * wall->getPoint(0).y - pos.y - 2 * r;
-                speed.y *= -1;
+                collision_prop[2 * collision_prop[0] + 1] = collision_type;
+                collision_prop[2 * collision_prop[0] + 2] = i;
+                collision_prop[0]++;
             }
-            else if (abs(newpos.x - wall->getPoint(1).x) + abs(pos.x - wall->getPoint(1).x) == abs(newpos.x - pos.x) && wall->getPoint(2).y <= wall->getPoint(1).x / (newpos.x - pos.x) * (newpos.y - pos.y) - (newpos.y * pos.x - newpos.x * pos.y) / (newpos.x - pos.x) <= wall->getPoint(1).y)
+        }
+        if (collision_prop[0] == 1)
+        {
+            this->physicalPartOfCollidingWithWalls(&walls[collision_prop[2]], DT, collision_prop[1]);
+        }
+        if (collision_prop[0] == 2)
+        {
+            if (collision_prop[1] == 2 && collision_prop[3] == 2)
             {
-                pos.x = 2 * wall->getPoint(1).x - pos.x + 2 * r;
-                speed.x *= -1;
+                this->physicalPartOfCollidingWithWalls(&walls[collision_prop[2]], DT, 2);
             }
-            else if (abs(newpos.y - wall->getPoint(2).y) + abs(pos.y - wall->getPoint(2).y) == abs(newpos.y - pos.y) && wall->getPoint(3).x <= wall->getPoint(2).y * (newpos.x - pos.x) / (newpos.y - pos.y) + (newpos.y * pos.x - newpos.x * pos.y) / (newpos.y - pos.y) <= wall->getPoint(2).x)
+            else if (collision_prop[1] == 1 && collision_prop[3] == 1)
             {
-                pos.y = 2 * wall->getPoint(2).y - pos.y + 2 * r;
-                speed.y *= -1;
+                this->physicalPartOfCollidingWithWalls(&walls[collision_prop[2]], DT, 1);
+                if (this->checkCollisionWithWall(&walls[collision_prop[4]], DT))
+                {
+                    this->physicalPartOfCollidingWithWalls(&walls[collision_prop[4]], DT, 1);
+                }
+            }
+            else if (collision_prop[1] == 1)
+            {
+                this->physicalPartOfCollidingWithWalls(&walls[collision_prop[2]], DT, 1);
             }
             else
             {
-                pos.x = 2 * wall->getPoint(3).x - pos.x - 2 * r;
-                speed.x *= -1;
+                this->physicalPartOfCollidingWithWalls(&walls[collision_prop[4]], DT, 1);
             }
         }
-        else if ((wall->getPoint(1).x >= newpos.x && newpos.x  >= wall->getPoint(0).x) || (wall->getPoint(1).y <= newpos.y && newpos.y <= wall->getPoint(2).y))
+    }
+
+    void physicalPartOfCollidingWithWalls(sf::ConvexShape* wall, const float DT, int type)
+    {
+        sf::Vector2f newpos = pos + speed * DT;
+
+        if (type == 0)
+            return;
+        if (type == 1)
         {
             if (wall->getPoint(0).x <= newpos.x && newpos.x <= wall->getPoint(1).x)
             {
@@ -222,7 +250,7 @@ struct Sphere
                 }
             }
         }
-        else if ((!flag) && (pow(r, 2) > pow((newpos - wall->getPoint(0)).x, 2) + pow((newpos - wall->getPoint(0)).y, 2) || pow(r, 2) > pow((newpos - wall->getPoint(1)).x, 2) + pow((newpos - wall->getPoint(1)).y, 2) || pow(r, 2) > pow((newpos - wall->getPoint(2)).x, 2) + pow((newpos - wall->getPoint(2)).y, 2) || pow(r, 2) > pow((newpos - wall->getPoint(3)).x, 2) + pow((newpos - wall->getPoint(3)).y, 2)))
+        else
         {
             if (newpos.x < wall->getPoint(0).x)
             {
@@ -247,7 +275,6 @@ struct Sphere
                     sf::Vector2f e = sf::Vector2f(x - newpos.x, y - newpos.y);
                     speed = e * (-2 * (speed.x * e.x + speed.y * e.y) / ((x - newpos.x) * (x - newpos.x) + (y - newpos.y) * (y - newpos.y))) + speed;
                     pos -= speed * DT;
-                    flag = true;
                 }
                 else
                 {
@@ -270,7 +297,6 @@ struct Sphere
                     sf::Vector2f e = sf::Vector2f(x - newpos.x, y - newpos.y);
                     speed = e * (-2 * (speed.x * e.x + speed.y * e.y) / ((x - newpos.x) * (x - newpos.x) + (y - newpos.y) * (y - newpos.y))) + speed;
                     pos -= speed * DT;
-                    flag = true;
                 }
             }
             else
@@ -296,7 +322,6 @@ struct Sphere
                     sf::Vector2f e = sf::Vector2f(x - newpos.x, y - newpos.y);
                     speed = e * (-2 * (speed.x * e.x + speed.y * e.y) / ((x - newpos.x) * (x - newpos.x) + (y - newpos.y) * (y - newpos.y))) + speed;
                     pos -= speed * DT;
-                    flag = true;
                 }
                 else
                 {
@@ -319,7 +344,6 @@ struct Sphere
                     sf::Vector2f e = sf::Vector2f(x - newpos.x, y - newpos.y);
                     speed = e * (-2 * (speed.x * e.x + speed.y * e.y) / ((x - newpos.x) * (x - newpos.x) + (y - newpos.y) * (y - newpos.y))) + speed;
                     pos -= speed * DT;
-                    flag = true;
                 }
             }
         }
