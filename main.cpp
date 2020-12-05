@@ -1,5 +1,7 @@
 #include <SFML/Graphics.hpp>
-#include "Objects.h"
+#include "Sphere.h"
+#include "Floor.h"
+#include "Player.h"
 #include <cstdio>
 #include <iostream>
 #include <cstdlib>
