@@ -69,6 +69,7 @@ struct Sphere
     void move(const float DT)
     {
         speed = speed + acceleration * DT;
+        acceleration = sf::Vector2f(0, 0);
         pos = pos + speed * DT;
     }
 
@@ -111,7 +112,7 @@ struct Sphere
             return 0;
         if ((wall->getPoint(1).x >= newpos.x && newpos.x >= wall->getPoint(0).x) || (wall->getPoint(1).y <= newpos.y && newpos.y <= wall->getPoint(2).y))
             return 1;
-        if ((pow(r, 2) > pow((newpos - wall->getPoint(0)).x, 2) + pow((newpos - wall->getPoint(0)).y, 2) || pow(r, 2) > pow((newpos - wall->getPoint(1)).x, 2) + pow((newpos - wall->getPoint(1)).y, 2) || pow(r, 2) > pow((newpos - wall->getPoint(2)).x, 2) + pow((newpos - wall->getPoint(2)).y, 2) || pow(r, 2) > pow((newpos - wall->getPoint(3)).x, 2) + pow((newpos - wall->getPoint(3)).y, 2)))
+        if (len(newpos - wall->getPoint(0)) < r || len(newpos - wall->getPoint(1)) < r || len(newpos - wall->getPoint(2)) < r || len(newpos - wall->getPoint(3)) < r)
             return 2;
         return 0;
     }
@@ -222,8 +223,7 @@ struct Sphere
                     pos = newpos - intersectionPoint + wall->getPoint(2);
                 }
             }
-            sf::Vector2f e = (intersectionPoint - newpos);
-            speed = e * (-2 * (speed.x * (intersectionPoint - newpos).x + speed.y * (intersectionPoint - newpos).y) / float(pow(len((intersectionPoint - newpos)), 2))) + speed;
+            speed = (intersectionPoint - newpos) * (-2 * (speed.x * (intersectionPoint - newpos).x + speed.y * (intersectionPoint - newpos).y) / float(pow(len((intersectionPoint - newpos)), 2))) + speed;
             pos -= speed * DT;
         }
     }

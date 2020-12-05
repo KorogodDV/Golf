@@ -14,6 +14,16 @@ void defWall(sf::ConvexShape* wall, sf::Vector2f A, sf::Vector2f B, sf::Vector2f
 	wall->setPoint(3, D);
 };
 
+bool isBallAtRest(Sphere ball)
+{
+	return len(ball.speed) == 0;
+}
+
+bool isCursorOnController(sf::Vector2f curpos, Player player)
+{
+	return len(curpos - player.pos) < player.radius;
+}
+
 const int window_length = 1280;
 const int window_width = 720;
 const float DT = 1.0;
@@ -158,21 +168,25 @@ int main()
 				window.close();
 				break;
 			}
-			if ((!players[move].play) &&(pow(players[(move + 1) % 2].ball.speed.x, 2) + pow(players[(move + 1) % 2].ball.speed.y, 2) == 0) && event.type == sf::Event::MouseButtonPressed && (pow(curpos.x - players[move].pos.x, 2) + pow(curpos.y - players[move].pos.y, 2) < pow(players[move].radius, 2)))
+			if (event.type == sf::Event::MouseButtonPressed)
 			{
+				if ((!players[move].play) && isBallAtRest(players[0].ball) && isBallAtRest(players[1].ball) && isCursorOnController(curpos, players[move]))
 				players[move].play = true;
 			}
 			if (event.type == sf::Event::MouseMoved)
 			{
 				curpos = sf::Vector2f(event.mouseMove.x, event.mouseMove.y);
 			}
-			if (event.type == sf::Event::MouseButtonReleased && players[move].play)
+			if (event.type == sf::Event::MouseButtonReleased)
 			{
-				players[move].play = false;
-				players[move].ball.speed = players[move].direction(curpos) * players[move].force(t);
-				players[move].count++;
-				t = 0;
-				move = (move + 1) % 2;
+				if (players[move].play)
+				{
+					players[move].play = false;
+					players[move].ball.speed = players[move].direction(curpos) * players[move].force(t);
+					players[move].count++;
+					t = 0;
+					move = (move + 1) % 2;
+				}
 			}
 			if ((event.type == sf::Event::KeyPressed) || (event.type == sf::Event::MouseButtonPressed))
 			{
@@ -189,7 +203,7 @@ int main()
 			if (players[0].count > players[1].count)
 				endPlay(&window, players[0], "RED", &font);
 			else
-				endPlay(&window, players[1], "BLUE",  &font);
+				endPlay(&window, players[1], "BLUE", &font);
 		}
 		else
 		{
