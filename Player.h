@@ -6,6 +6,7 @@
 
 struct Player
 {
+    std::string name;
     Sphere ball;
     int count;
     sf::Vector2f pos;
@@ -17,8 +18,9 @@ struct Player
     float lengthShots;
     bool play;
 
-    Player(Sphere ball, int count, sf::Vector2f pos, float radius, int red, int green, int blue, sf::Vector2f posShots, float lengthShots, bool play)
+    Player(std::string name, Sphere ball, int count, sf::Vector2f pos, float radius, int red, int green, int blue, sf::Vector2f posShots, float lengthShots, bool play)
     {
+        this->name = name;
         this->ball = ball;
         this->count = count;
         this->radius = radius;
@@ -30,7 +32,6 @@ struct Player
         this->lengthShots = lengthShots;
         this->play = play;
     }
-
     sf::Vector2f direction(sf::Vector2f posCursor)
     {
         float length = sqrt(pow((posCursor - pos).x, 2) + pow((posCursor - pos).y, 2));
