@@ -197,7 +197,9 @@ int main()
 			}
 		}
 
-		if (players[0].count > players[1].count)
+		if (playEnd)
+		{
+			if (players[0].count > players[1].count)
 				endPlay(&window, players[0], &font);
 			else
 				endPlay(&window, players[1], &font);
