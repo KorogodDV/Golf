@@ -119,42 +119,42 @@ struct Sphere
 
     void collideWithWalls(sf::ConvexShape* walls, const float DT)
     {
-        int collision_prop[5] = { 0, -1, -1 , -1, -1 };
+        int collisions[5] = { 0, -1, -1 , -1, -1 };
         for (int i = 0; i < 11; i++)
         {
             int collision_type = this->checkCollisionWithWall(&walls[i], DT);
             if (collision_type)
             {
-                collision_prop[2 * collision_prop[0] + 1] = collision_type;
-                collision_prop[2 * collision_prop[0] + 2] = i;
-                collision_prop[0]++;
+                collisions[2 * collisions[0] + 1] = collision_type;
+                collisions[2 * collisions[0] + 2] = i;
+                collisions[0]++;
             }
         }
-        if (collision_prop[0] == 1)
+        if (collisions[0] == 1)
         {
-            this->physicalPartOfCollidingWithWalls(&walls[collision_prop[2]], DT, collision_prop[1]);
+            this->physicalPartOfCollidingWithWalls(&walls[collisions[2]], DT, collisions[1]);
         }
-        if (collision_prop[0] == 2)
+        if (collisions[0] == 2)
         {
-            if (collision_prop[1] == 2 && collision_prop[3] == 2)
+            if (collisions[1] == 2 && collisions[3] == 2)
             {
-                this->physicalPartOfCollidingWithWalls(&walls[collision_prop[2]], DT, 2);
+                this->physicalPartOfCollidingWithWalls(&walls[collisions[2]], DT, 2);
             }
-            else if (collision_prop[1] == 1 && collision_prop[3] == 1)
+            else if (collisions[1] == 1 && collisions[3] == 1)
             {
-                this->physicalPartOfCollidingWithWalls(&walls[collision_prop[2]], DT, 1);
-                if (this->checkCollisionWithWall(&walls[collision_prop[4]], DT))
+                this->physicalPartOfCollidingWithWalls(&walls[collisions[2]], DT, 1);
+                if (this->checkCollisionWithWall(&walls[collisions[4]], DT))
                 {
-                    this->physicalPartOfCollidingWithWalls(&walls[collision_prop[4]], DT, 1);
+                    this->physicalPartOfCollidingWithWalls(&walls[collisions[4]], DT, 1);
                 }
             }
-            else if (collision_prop[1] == 1)
+            else if (collisions[1] == 1)
             {
-                this->physicalPartOfCollidingWithWalls(&walls[collision_prop[2]], DT, 1);
+                this->physicalPartOfCollidingWithWalls(&walls[collisions[2]], DT, 1);
             }
             else
             {
-                this->physicalPartOfCollidingWithWalls(&walls[collision_prop[4]], DT, 1);
+                this->physicalPartOfCollidingWithWalls(&walls[collisions[4]], DT, 1);
             }
         }
     }
